@@ -1,133 +1,603 @@
 <!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity Web Player | GameTest</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-  </head>
-  <body>
-    <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
-      <div id="unity-loading-bar">
-        <div id="unity-logo"></div>
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
-        </div>
-      </div>
-      <div id="unity-warning"> </div>
-      <div id="unity-footer">
-        <div id="unity-logo-title-footer"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">GameTest</div>
-      </div>
-    </div>
-    <script>
-      var canvas = document.querySelector("#unity-canvas");
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ΑΡΧΩΝ — Эпоха ЧЗХ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@100;200;300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--gold:#d4af37;--void:#050508;--abyss:#0a0a12;--white:#e8e6e3;--red:#8b0000;--cyan:#00f0ff;--purple:#7b00ff;--green:#00ff88;--gron:#9b30ff}
+html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--gold) var(--void)}
+body{background:var(--void);color:var(--white);font-family:'Exo 2',sans-serif;overflow-x:hidden;cursor:crosshair}
+.cosmic-bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;background:radial-gradient(ellipse at 20% 50%,rgba(212,175,55,.03) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(155,48,255,.05) 0%,transparent 40%),var(--void)}
+.cosmic-bg::after{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background-image:radial-gradient(1px 1px at 10% 20%,rgba(255,255,255,.3),transparent),radial-gradient(1px 1px at 30% 70%,rgba(255,215,0,.2),transparent),radial-gradient(1px 1px at 60% 40%,rgba(255,255,255,.2),transparent),radial-gradient(1px 1px at 80% 80%,rgba(0,240,255,.15),transparent),radial-gradient(1.5px 1.5px at 45% 55%,rgba(155,48,255,.3),transparent);animation:sp 8s ease-in-out infinite alternate}
+@keyframes sp{0%{opacity:.6}100%{opacity:1}}
+.scanline{position:fixed;top:0;left:0;width:100%;height:3px;z-index:9999;background:linear-gradient(90deg,transparent,var(--cyan),var(--gold),var(--gron),transparent);animation:sd 6s linear infinite;opacity:.4;pointer-events:none}
+@keyframes sd{0%{top:-3px}100%{top:100vh}}
+.glitch-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:9998;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,.008) 2px,rgba(255,255,255,.008) 4px)}
 
-      // Shows a temporary message banner/ribbon for a few seconds, or
-      // a permanent error message on top of the canvas if type=='error'.
-      // If type=='warning', a yellow highlight color is used.
-      // Modify or remove this function to customize the visually presented
-      // way that non-critical warnings and error messages are presented to the
-      // user.
-      function unityShowBanner(msg, type) {
-        var warningBanner = document.querySelector("#unity-warning");
-        function updateBannerVisibility() {
-          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-        }
-        var div = document.createElement('div');
-        div.innerHTML = msg;
-        warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
-        else {
-          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-          setTimeout(function() {
-            warningBanner.removeChild(div);
-            updateBannerVisibility();
-          }, 5000);
-        }
-        updateBannerVisibility();
-      }
+/* HEADER */
+.header{position:fixed;top:0;left:0;width:100%;z-index:1000;background:linear-gradient(180deg,rgba(5,5,8,.95),rgba(5,5,8,.7) 70%,transparent);backdrop-filter:blur(20px);padding:12px 0;border-bottom:1px solid rgba(212,175,55,.1)}
+.header-inner{max-width:1600px;margin:0 auto;padding:0 40px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Orbitron',sans-serif;font-size:28px;font-weight:900;letter-spacing:8px;background:linear-gradient(135deg,var(--gold),#fff8dc,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;position:relative}
+.logo::after{content:'ЕДИНЫЙ ПОРТАЛ ЭПОХИ ЧЗХ';position:absolute;bottom:-14px;left:0;font-size:7px;letter-spacing:6px;background:linear-gradient(90deg,var(--cyan),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-family:'Rajdhani'}
+.hstat{display:flex;align-items:center;gap:30px;font-family:'Rajdhani';font-size:11px;letter-spacing:3px;color:rgba(212,175,55,.6);text-transform:uppercase}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pu 2s infinite}
+@keyframes pu{0%,100%{opacity:1}50%{opacity:.3}}
+.htime{font-family:'Orbitron';font-size:13px;color:var(--cyan);letter-spacing:2px}
 
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/BuildWithoutGzip.loader.js";
-      var config = {
-        arguments: [],
-        dataUrl: buildUrl + "/BuildWithoutGzip.data",
-        frameworkUrl: buildUrl + "/BuildWithoutGzip.framework.js",
-        codeUrl: buildUrl + "/BuildWithoutGzip.wasm",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "Lob Inc.",
-        productName: "GameTest",
-        productVersion: "2.0.1",
-        showBanner: unityShowBanner,
-        // errorHandler: function(err, url, line) {
-        //    alert("error " + err + " occurred at line " + line);
-        //    // Return 'true' if you handled this error and don't want Unity
-        //    // to process it further, 'false' otherwise.
-        //    return true;
-        // },
-      };
+/* TICKER */
+.nav-ribbon{position:fixed;top:65px;left:0;width:100%;z-index:999;background:rgba(10,10,18,.9);backdrop-filter:blur(10px);border-bottom:1px solid rgba(0,240,255,.08);overflow:hidden}
+.ticker{display:flex;animation:ts 80s linear infinite;white-space:nowrap;padding:8px 0}
+.ti{font-family:'Rajdhani';font-size:12px;letter-spacing:2px;text-transform:uppercase;padding:0 40px;color:rgba(232,230,227,.5);flex-shrink:0}
+.ti .u{color:var(--red);font-weight:700}.ti .d{color:var(--gold)}.ti .g{color:var(--gron);font-weight:600}
+.tsep{color:rgba(0,240,255,.3);padding:0 10px}
+@keyframes ts{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-      // By default, Unity keeps WebGL canvas render target size matched with
-      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
-      // Set this to false if you want to decouple this synchronization from
-      // happening inside the engine, and you would instead like to size up
-      // the canvas DOM size and WebGL render target sizes yourself.
-      // config.matchWebGLToCanvasSize = false;
+.main{position:relative;z-index:1;padding-top:120px;max-width:1600px;margin:0 auto}
 
-      // If you would like all file writes inside Unity Application.persistentDataPath
-      // directory to automatically persist so that the contents are remembered when
-      // the user revisits the site the next time, uncomment the following line:
-      // config.autoSyncPersistentDataPath = true;
-      // This autosyncing is currently not the default behavior to avoid regressing
-      // existing user projects that might rely on the earlier manual
-      // JS_FileSystem_Sync() behavior, but in future Unity version, this will be
-      // expected to change.
+/* HERO */
+.hero{position:relative;min-height:90vh;display:flex;align-items:center;justify-content:center;margin:0 20px 60px;overflow:hidden;border:1px solid rgba(212,175,55,.08);background:radial-gradient(ellipse at center,rgba(155,48,255,.06),transparent 60%),var(--abyss)}
+.hero-corners{position:absolute;width:100%;height:100%;top:0;left:0;pointer-events:none}
+.hcr{position:absolute;width:40px;height:40px;border-color:var(--gold);opacity:.3}
+.hcr.tl{top:15px;left:15px;border-top:1px solid;border-left:1px solid}.hcr.tr{top:15px;right:15px;border-top:1px solid;border-right:1px solid}
+.hcr.bl{bottom:15px;left:15px;border-bottom:1px solid;border-left:1px solid}.hcr.br{bottom:15px;right:15px;border-bottom:1px solid;border-right:1px solid}
+.hero-content{position:relative;z-index:2;text-align:center;max-width:1000px;padding:40px}
+.hep{font-family:'Rajdhani';font-size:11px;letter-spacing:12px;text-transform:uppercase;color:var(--cyan);margin-bottom:20px;opacity:.7}
+.hdt{font-family:'Orbitron';font-size:13px;letter-spacing:6px;color:var(--gold);margin-bottom:40px;opacity:.5}
+.hero h1{font-family:'Orbitron';font-size:clamp(28px,5vw,60px);font-weight:900;line-height:1.1;letter-spacing:4px;text-transform:uppercase;background:linear-gradient(180deg,#fff,var(--gold) 50%,#8b6914);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:30px;animation:hg 4s ease-in-out infinite alternate}
+@keyframes hg{0%{filter:drop-shadow(0 0 20px rgba(212,175,55,.2))}100%{filter:drop-shadow(0 0 60px rgba(212,175,55,.5))}}
+.hsub{font-size:16px;font-weight:200;line-height:1.8;letter-spacing:1px;color:rgba(232,230,227,.6);max-width:800px;margin:0 auto}
+.hq{margin-top:30px;padding:20px 30px;border-left:3px solid var(--gron);background:rgba(155,48,255,.05);text-align:left;max-width:600px;margin-left:auto;margin-right:auto}
+.hq p{font-family:'Rajdhani';font-size:18px;font-weight:600;color:var(--gold);line-height:1.6}.hq .s{font-size:11px;color:rgba(232,230,227,.3);letter-spacing:3px;margin-top:8px;text-transform:uppercase}
+.czh{position:absolute;font-family:'Orbitron';font-weight:900;color:rgba(155,48,255,.04);pointer-events:none;animation:cd 20s linear infinite}
+@keyframes cd{0%{transform:translateY(0) rotate(-5deg)}100%{transform:translateY(-200px) rotate(5deg)}}
+.hero-img{position:absolute;right:30px;bottom:30px;width:280px;opacity:.15;pointer-events:none;filter:saturate(.5);z-index:1}
 
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
+/* LIVE */
+.live-strip{margin:0 20px 60px;padding:20px 30px;background:linear-gradient(90deg,rgba(155,48,255,.12),rgba(139,0,0,.05),rgba(155,48,255,.12));border:1px solid rgba(155,48,255,.25);display:flex;align-items:center;gap:20px;position:relative;overflow:hidden}
+.live-strip::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(155,48,255,.08),transparent);animation:lw 3s ease-in-out infinite}
+@keyframes lw{0%,100%{transform:translateX(-100%)}50%{transform:translateX(100%)}}
+.lb{background:var(--red);padding:4px 14px;font-family:'Orbitron';font-size:10px;letter-spacing:4px;animation:lp 1.5s infinite;flex-shrink:0}
+@keyframes lp{0%,100%{opacity:1}50%{opacity:.5}}
+.lt{font-family:'Rajdhani';font-size:14px;letter-spacing:2px;color:rgba(232,230,227,.8);text-transform:uppercase}
 
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
-        document.querySelector("#unity-container").className = "unity-mobile";
-        canvas.className = "unity-mobile";
+.slabel{font-family:'Orbitron';font-size:10px;letter-spacing:10px;text-transform:uppercase;color:var(--gold);opacity:.5;margin-bottom:20px;padding-left:20px;border-left:2px solid var(--gold)}
 
-        // To lower canvas resolution on mobile devices to gain some
-        // performance, uncomment the following line:
-        // config.devicePixelRatio = 1;
+/* VIDEO */
+.vsec{margin:0 20px 80px}
+.vwrap{position:relative;border:1px solid rgba(212,175,55,.1);background:var(--abyss);overflow:hidden}
+.vinner{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden}
+.vinner video{width:100%;height:100%;object-fit:cover;display:block}
+.vhud{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;padding:20px 24px;display:flex;flex-direction:column;justify-content:space-between;z-index:3;background:linear-gradient(180deg,rgba(5,5,8,.6),transparent 25%,transparent 75%,rgba(5,5,8,.8)),linear-gradient(90deg,rgba(5,5,8,.3),transparent 15%,transparent 85%,rgba(5,5,8,.3))}
+.vhud-top{display:flex;justify-content:space-between}
+.vhtag{font-family:'Orbitron';font-size:8px;letter-spacing:5px;text-transform:uppercase;color:var(--cyan);opacity:.7;background:rgba(0,0,0,.5);padding:5px 12px;border:1px solid rgba(0,240,255,.12)}
+.vhlive{display:flex;align-items:center;gap:8px;font-family:'Orbitron';font-size:9px;letter-spacing:3px;color:var(--red);background:rgba(0,0,0,.7);padding:5px 12px;border:1px solid rgba(139,0,0,.25)}
+.vhlive .dot{width:5px;height:5px;border-radius:50%;background:var(--red);animation:lp 1s infinite}
+.vhud-bottom{display:flex;justify-content:space-between;align-items:flex-end}
+.vhhl h2{font-family:'Orbitron';font-size:clamp(13px,2vw,22px);font-weight:700;letter-spacing:2px;line-height:1.3;text-transform:uppercase;text-shadow:0 0 30px rgba(0,0,0,.8);max-width:500px}
+.vhhl p{font-family:'Rajdhani';font-size:11px;letter-spacing:2px;color:rgba(232,230,227,.4);margin-top:6px;text-transform:uppercase}
+.vhst{text-align:right;font-family:'Rajdhani';font-size:10px;letter-spacing:2px;color:rgba(232,230,227,.3);line-height:2}
+.vedge{position:absolute;bottom:0;left:0;width:100%;height:3px;z-index:4;background:linear-gradient(90deg,transparent,var(--gron),var(--gold),var(--gron),transparent);box-shadow:0 0 15px var(--gron);opacity:.6}
 
+/* TIMELINE */
+.timeline-section{margin:0 20px 80px}
+.timeline{position:relative;padding-left:40px}
+.timeline::before{content:'';position:absolute;left:14px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--gold),var(--gron),var(--red),var(--gold))}
+.tl-item{position:relative;margin-bottom:40px;padding:24px 28px;background:rgba(10,10,18,.6);border:1px solid rgba(212,175,55,.06);transition:.3s}
+.tl-item:hover{border-color:rgba(212,175,55,.15);background:rgba(10,10,18,.8)}
+.tl-item::before{content:'';position:absolute;left:-33px;top:28px;width:12px;height:12px;border-radius:50%;border:2px solid var(--gold);background:var(--void)}
+.tl-item.event-signal::before{border-color:var(--gron);box-shadow:0 0 10px var(--gron)}
+.tl-item.event-god::before{border-color:var(--gold);box-shadow:0 0 10px var(--gold)}
+.tl-item.event-war::before{border-color:var(--red);box-shadow:0 0 10px var(--red)}
+.tl-item.event-batl::before{border-color:#ff6600;box-shadow:0 0 10px #ff6600}
+.tl-date{font-family:'Orbitron';font-size:9px;letter-spacing:4px;color:var(--cyan);opacity:.5;margin-bottom:12px;text-transform:uppercase}
+.tl-tag{display:inline-block;font-family:'Orbitron';font-size:7px;letter-spacing:4px;padding:3px 10px;margin-bottom:14px;text-transform:uppercase;border:1px solid}
+.tl-tag.sig{color:var(--gron);border-color:rgba(155,48,255,.3)}
+.tl-tag.god{color:var(--gold);border-color:rgba(212,175,55,.3)}
+.tl-tag.war{color:var(--red);border-color:rgba(139,0,0,.3)}
+.tl-tag.batl{color:#ff6600;border-color:rgba(255,102,0,.3)}
+.tl-item h3{font-family:'Orbitron';font-size:clamp(14px,1.8vw,22px);font-weight:700;letter-spacing:1px;line-height:1.4;text-transform:uppercase;margin-bottom:12px}
+.tl-item p{font-size:13px;font-weight:300;line-height:1.7;color:rgba(232,230,227,.5)}
+.tl-code{background:rgba(0,0,0,.4);border:1px solid rgba(155,48,255,.1);padding:16px 20px;margin:12px 0;font-family:'Courier New',monospace;font-size:11px;color:var(--gron);line-height:1.6;overflow-x:auto;white-space:pre-wrap;word-break:break-all;max-height:200px;overflow-y:auto}
+.tl-quote{background:rgba(155,48,255,.06);border-left:3px solid var(--gold);padding:16px 20px;margin:12px 0}
+.tl-quote p{font-family:'Rajdhani';font-size:15px;font-weight:600;color:var(--gold);line-height:1.5}
+.tl-quote .attr{font-size:10px;color:rgba(232,230,227,.25);letter-spacing:3px;margin-top:6px;text-transform:uppercase}
+.tl-img{width:100%;max-width:500px;margin:16px 0;border:1px solid rgba(155,48,255,.15);filter:saturate(.9)}
+.tl-scream{font-family:'Orbitron';font-size:clamp(18px,3vw,36px);font-weight:900;color:var(--gold);text-transform:uppercase;letter-spacing:3px;line-height:1.3;margin:12px 0;text-shadow:0 0 20px rgba(212,175,55,.3)}
+.tl-alien{font-family:'Courier New',monospace;font-size:13px;color:var(--red);line-height:1.8;background:rgba(139,0,0,.08);border:1px solid rgba(139,0,0,.2);padding:16px 20px;margin:12px 0;letter-spacing:1px}
 
-      } else {
-        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-        canvas.style.width = "960px";
-        canvas.style.height = "600px";
-      }
+/* BATTLEZONE ROAST */
+.bz-roast{margin:0 20px 80px;border:2px solid rgba(139,0,0,.3);background:linear-gradient(135deg,rgba(139,0,0,.05),rgba(10,10,18,.8));padding:40px;position:relative;overflow:hidden}
+.bz-roast::before{content:'⚠ ПОЗОР ВСЕЛЕННОЙ';position:absolute;top:0;right:0;background:var(--red);color:#fff;font-family:'Orbitron';font-size:8px;letter-spacing:4px;padding:6px 16px}
+.bz-roast::after{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(139,0,0,.02) 10px,rgba(139,0,0,.02) 20px);pointer-events:none}
+.bz-header{display:flex;align-items:center;gap:20px;margin-bottom:24px}
+.bz-badge{font-family:'Orbitron';font-size:9px;letter-spacing:5px;color:var(--red);text-transform:uppercase;padding:4px 12px;border:1px solid var(--red);animation:lp 2s infinite}
+.bz-header h2{font-family:'Orbitron';font-size:clamp(16px,2vw,26px);font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--red)}
+.bz-url{font-family:'Courier New',monospace;font-size:11px;color:rgba(232,230,227,.2);margin-bottom:20px;text-decoration:line-through;letter-spacing:1px}
+.bz-body{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+.bz-body p{font-size:14px;line-height:1.8;color:rgba(232,230,227,.5)}
+.bz-stats{display:flex;flex-direction:column;gap:12px}
+.bz-stat{display:flex;justify-content:space-between;padding:10px 14px;background:rgba(139,0,0,.08);border:1px solid rgba(139,0,0,.1);font-family:'Rajdhani';font-size:13px}
+.bz-stat .l{color:rgba(232,230,227,.4)}.bz-stat .v{font-family:'Orbitron';font-size:11px;color:var(--red)}
+.bz-verdict{margin-top:24px;padding:16px 20px;background:rgba(139,0,0,.1);border:1px solid rgba(139,0,0,.2);text-align:center}
+.bz-verdict p{font-family:'Orbitron';font-size:12px;letter-spacing:4px;color:var(--red);text-transform:uppercase}
 
-      document.querySelector("#unity-loading-bar").style.display = "block";
+/* GAME */
+.gsec{margin:0 20px 80px}.gc{position:relative;border:1px solid rgba(212,175,55,.1);background:var(--abyss);overflow:hidden}
+.gf{width:100%;aspect-ratio:16/9;background:radial-gradient(ellipse at center,rgba(74,0,128,.2),transparent 70%),linear-gradient(180deg,#080810,#0c0c1a);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;cursor:pointer}
+.gf canvas{position:absolute;top:0;left:0;width:100%;height:100%}
+.gui{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+.gui-c{position:absolute;padding:20px;font-family:'Orbitron'}
+.gui-tl{top:0;left:0;font-size:9px;letter-spacing:4px;color:var(--cyan);opacity:.6}
+.gui-tr{top:0;right:0;text-align:right;font-size:8px;letter-spacing:3px;color:var(--gold);opacity:.5}
+.gui-bl{bottom:40px;left:0;font-size:8px;color:rgba(232,230,227,.3);letter-spacing:2px}
+.gso{position:relative;z-index:2;text-align:center;padding:40px}
+.gt{font-family:'Orbitron';font-size:clamp(24px,4vw,52px);font-weight:900;letter-spacing:6px;text-transform:uppercase;background:linear-gradient(180deg,#fff,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px}
+.gst{font-family:'Rajdhani';font-size:16px;letter-spacing:6px;text-transform:uppercase;color:var(--gron);opacity:.7;margin-bottom:8px}
+.gd{font-size:13px;font-weight:300;color:rgba(232,230,227,.35);max-width:500px;margin:0 auto 30px;line-height:1.6}
+.gpb{display:inline-flex;align-items:center;gap:12px;background:0;border:1px solid var(--gold);color:var(--gold);font-family:'Orbitron';font-size:11px;letter-spacing:6px;padding:16px 40px;cursor:pointer;text-transform:uppercase;transition:.4s;pointer-events:all;position:relative;overflow:hidden}
+.gpb:hover{background:rgba(212,175,55,.1);box-shadow:0 0 30px rgba(212,175,55,.2)}
+.ghb{position:absolute;bottom:0;left:0;width:100%;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);padding:10px 20px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(212,175,55,.08);font-family:'Rajdhani';font-size:10px;letter-spacing:3px;color:rgba(232,230,227,.3);text-transform:uppercase;z-index:5}
+.gf.active .gso{display:none}
 
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
-              }).then((unityInstance) => {
-                document.querySelector("#unity-loading-bar").style.display = "none";
-                document.querySelector("#unity-fullscreen-button").onclick = () => {
-                  unityInstance.SetFullscreen(1);
-                };
+/* UNITY GAME */
+.usec{margin:0 20px 80px}
+.uc{position:relative;border:1px solid rgba(212,175,55,.1);background:var(--abyss);overflow:hidden}
+.uf{position:relative;width:100%;aspect-ratio:16/9;background:radial-gradient(ellipse at center,rgba(74,0,128,.15),transparent 70%),linear-gradient(180deg,#080810,#0c0c1a);overflow:hidden}
+.uf canvas{width:100%!important;height:100%!important}
+.ugui{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:3;background:linear-gradient(180deg,rgba(5,5,8,.5),transparent 20%,transparent 80%,rgba(5,5,8,.6))}
+.ugui-top{position:absolute;top:0;left:0;width:100%;display:flex;justify-content:space-between;padding:16px 20px}
+.ugui-tag{font-family:'Orbitron';font-size:8px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);opacity:.6;background:rgba(0,0,0,.5);padding:5px 12px;border:1px solid rgba(212,175,55,.12)}
+.ugui-ver{font-family:'Orbitron';font-size:8px;letter-spacing:3px;color:var(--cyan);opacity:.5;background:rgba(0,0,0,.5);padding:5px 12px;border:1px solid rgba(0,240,255,.1)}
+.uedge{position:absolute;bottom:0;left:0;width:100%;height:3px;z-index:4;background:linear-gradient(90deg,transparent,var(--gold),var(--gron),var(--gold),transparent);box-shadow:0 0 15px var(--gold);opacity:.6}
+.uhb{background:rgba(0,0,0,.7);backdrop-filter:blur(10px);padding:10px 20px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(212,175,55,.08);font-family:'Rajdhani';font-size:10px;letter-spacing:3px;color:rgba(232,230,227,.3);text-transform:uppercase}
+#unity-loading-overlay{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(5,5,8,.9);z-index:10;transition:opacity .5s}
+#unity-loading-overlay.hidden{opacity:0;pointer-events:none}
+.uload-title{font-family:'Orbitron';font-size:clamp(16px,2.5vw,28px);font-weight:700;letter-spacing:4px;text-transform:uppercase;background:linear-gradient(180deg,#fff,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.uload-sub{font-family:'Rajdhani';font-size:13px;letter-spacing:4px;color:var(--gron);opacity:.6;text-transform:uppercase;margin-bottom:30px}
+.uload-bar{width:260px;height:3px;background:rgba(255,255,255,.06);overflow:hidden;position:relative}
+.uload-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gron));transition:width .3s;box-shadow:0 0 10px var(--gold)}
+.uload-pct{font-family:'Orbitron';font-size:11px;letter-spacing:3px;color:var(--gold);margin-top:12px;opacity:.7}
+.ubtn-start{display:inline-flex;align-items:center;gap:12px;background:0;border:1px solid var(--gold);color:var(--gold);font-family:'Orbitron';font-size:11px;letter-spacing:6px;padding:16px 40px;cursor:pointer;text-transform:uppercase;transition:.4s;position:relative;overflow:hidden;margin-top:20px}
+.ubtn-start:hover{background:rgba(212,175,55,.1);box-shadow:0 0 30px rgba(212,175,55,.2)}
 
-              }).catch((message) => {
-                alert(message);
-              });
-            };
+/* NEWS */
+.nsec{margin:0 20px 80px}
+.ng{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
+.nc{border:1px solid rgba(212,175,55,.06);background:rgba(10,10,18,.6);overflow:hidden;transition:all .5s cubic-bezier(.16,1,.3,1);cursor:pointer}
+.nc:hover{border-color:rgba(212,175,55,.2);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.nc.f{grid-column:span 8;grid-row:span 2}.nc.m{grid-column:span 4}.nc.w{grid-column:span 6}.nc.fl{grid-column:span 12}
+.nci{padding:28px;height:100%;display:flex;flex-direction:column}
+.nct{font-family:'Orbitron';font-size:8px;letter-spacing:5px;text-transform:uppercase;margin-bottom:16px}
+.nct.br{color:var(--red)}.nct.dv{color:var(--gold)}.nct.tc{color:var(--green)}.nct.gr{color:var(--gron)}.nct.bt{color:#ff6600}.nct.cu{color:#cc66ff}
+.nc h3{font-family:'Orbitron';font-size:clamp(14px,1.5vw,22px);font-weight:700;letter-spacing:1px;line-height:1.4;text-transform:uppercase;margin-bottom:14px;transition:color .3s}
+.nc:hover h3{color:var(--gold)}.nc p{font-size:13px;font-weight:300;line-height:1.7;color:rgba(232,230,227,.5);flex:1}
+.nm{margin-top:16px;display:flex;justify-content:space-between;font-family:'Rajdhani';font-size:10px;letter-spacing:2px;color:rgba(232,230,227,.25);text-transform:uppercase;padding-top:16px;border-top:1px solid rgba(255,255,255,.03)}
+.nc.f h3{font-size:clamp(18px,2.2vw,28px)}
+.ncv{height:200px;margin:-28px -28px 20px;overflow:hidden;position:relative}.nc.f .ncv{height:300px}
+.ncv::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:60%;background:linear-gradient(transparent,rgba(10,10,18,.95))}
+.ncv img{width:100%;height:100%;object-fit:cover;filter:saturate(.8) contrast(1.1)}
 
-      document.body.appendChild(script);
+/* SIDEBAR */
+.sidebar{margin:0 20px 80px;display:grid;grid-template-columns:1fr 350px;gap:30px}
+.fs{display:flex;flex-direction:column;gap:2px}
+.fi{padding:20px 24px;background:rgba(10,10,18,.4);border-left:2px solid transparent;transition:.3s;cursor:pointer;display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:start}
+.fi:hover{background:rgba(10,10,18,.8);border-left-color:var(--gold)}
+.ft{font-family:'Orbitron';font-size:9px;letter-spacing:2px;color:var(--cyan);opacity:.5;min-width:50px;padding-top:3px}
+.fc h4{font-family:'Rajdhani';font-size:15px;font-weight:600;letter-spacing:1px;line-height:1.4;margin-bottom:4px}
+.fc p{font-size:12px;font-weight:300;color:rgba(232,230,227,.4);line-height:1.5}
+.ftag{font-family:'Orbitron';font-size:7px;letter-spacing:3px;padding:3px 8px;border:1px solid rgba(212,175,55,.2);color:var(--gold);opacity:.5;white-space:nowrap}
+.dp{background:rgba(10,10,18,.6);border:1px solid rgba(0,240,255,.06);padding:24px}
+.dpt{font-family:'Orbitron';font-size:9px;letter-spacing:6px;color:var(--cyan);opacity:.5;margin-bottom:24px;text-transform:uppercase}
+.dr{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.02);font-family:'Rajdhani';font-size:13px}
+.dr .l{color:rgba(232,230,227,.4)}.dr .v{font-family:'Orbitron';font-size:12px;color:var(--gold)}
+.dr .v.d{color:var(--red)}.dr .v.s{color:var(--green)}.dr .v.g{color:var(--gron)}
+.db{margin-top:4px;height:2px;background:rgba(255,255,255,.03);overflow:hidden}.dbf{height:100%}
 
-    </script>
-  </body>
+.footer{margin-top:60px;padding:40px;background:rgba(5,5,8,.9);border-top:1px solid rgba(212,175,55,.05);text-align:center}
+.footer-logo{font-family:'Orbitron';font-size:14px;letter-spacing:10px;color:var(--gold);opacity:.3;margin-bottom:16px}
+.footer-text{font-family:'Rajdhani';font-size:10px;letter-spacing:4px;color:rgba(232,230,227,.15);text-transform:uppercase}
+
+.anim{opacity:0;transform:translateY(30px);animation:fin 1s forwards}
+@keyframes fin{to{opacity:1;transform:translateY(0)}}
+.d1{animation-delay:.1s}.d2{animation-delay:.2s}.d3{animation-delay:.3s}.d4{animation-delay:.4s}.d5{animation-delay:.5s}
+@media(max-width:1024px){.ng{grid-template-columns:repeat(6,1fr)}.nc.f{grid-column:span 6}.nc.m,.nc.w{grid-column:span 3}.nc.fl{grid-column:span 6}.sidebar{grid-template-columns:1fr}.bz-body{grid-template-columns:1fr}}
+@media(max-width:600px){.ng{grid-template-columns:1fr}.nc.f,.nc.m,.nc.w,.nc.fl{grid-column:span 1}.hstat{display:none}.bz-body{grid-template-columns:1fr}}
+
+/* NEWS BUTTON */
+.news-btn{display:block;position:relative;overflow:hidden;border:2px solid var(--red);border-radius:6px;background:linear-gradient(135deg,rgba(139,0,0,.2),rgba(155,48,255,.08),rgba(139,0,0,.15));text-decoration:none;color:var(--white);transition:all .4s;cursor:pointer;box-shadow:0 0 20px rgba(139,0,0,.2),0 0 60px rgba(139,0,0,.08),inset 0 0 30px rgba(139,0,0,.05);animation:btnpulse 2s ease-in-out infinite}
+@keyframes btnpulse{0%,100%{box-shadow:0 0 20px rgba(139,0,0,.2),0 0 60px rgba(139,0,0,.08),inset 0 0 30px rgba(139,0,0,.05);border-color:var(--red)}50%{box-shadow:0 0 35px rgba(255,32,32,.35),0 0 80px rgba(139,0,0,.15),inset 0 0 40px rgba(139,0,0,.08);border-color:#ff2020}}
+.news-btn:hover{border-color:#ff4444;box-shadow:0 0 50px rgba(255,32,32,.5),0 0 100px rgba(139,0,0,.25),inset 0 0 50px rgba(139,0,0,.1);transform:translateY(-3px) scale(1.005);animation:none}
+.news-btn:active{transform:translateY(0) scale(.995)}
+.news-btn-flash{position:absolute;top:0;left:-100%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);animation:newsflash 2.5s infinite}
+@keyframes newsflash{0%{left:-100%}100%{left:200%}}
+.news-btn-corner{position:absolute;width:16px;height:16px;border-color:#ff2020;border-style:solid;opacity:.6}
+.news-btn-corner.tl{top:6px;left:6px;border-width:2px 0 0 2px}
+.news-btn-corner.tr{top:6px;right:6px;border-width:2px 2px 0 0}
+.news-btn-corner.bl{bottom:6px;left:6px;border-width:0 0 2px 2px}
+.news-btn-corner.br{bottom:6px;right:6px;border-width:0 2px 2px 0}
+.news-btn-inner{position:relative;display:flex;align-items:center;gap:24px;padding:24px 34px}
+.news-btn-badge{font-family:'Orbitron';font-size:11px;font-weight:700;letter-spacing:3px;background:var(--red);color:#fff;padding:8px 16px;border-radius:2px;white-space:nowrap;animation:pu 1s infinite;box-shadow:0 0 15px rgba(139,0,0,.5)}
+.news-btn-text{flex:1;display:flex;flex-direction:column;gap:6px}
+.news-btn-title{font-family:'Orbitron';font-size:18px;font-weight:800;letter-spacing:4px;color:var(--white);text-transform:uppercase}
+.news-btn-sub{font-family:'Rajdhani';font-size:30px;font-weight:700;letter-spacing:6px;color:#ff2020;text-transform:uppercase;text-shadow:0 0 25px rgba(255,32,32,.5),0 0 50px rgba(139,0,0,.2)}
+.news-btn-hint{font-family:'Rajdhani';font-size:12px;letter-spacing:4px;color:rgba(255,255,255,.3);text-transform:uppercase;margin-top:2px;animation:hintblink 2s ease-in-out infinite}
+@keyframes hintblink{0%,100%{opacity:.3}50%{opacity:.7}}
+.news-btn-arrow{display:flex;flex-direction:column;align-items:center;gap:4px}
+.news-btn-arrow span{font-size:20px;color:#ff2020;animation:arrp 1s ease-in-out infinite alternate;filter:drop-shadow(0 0 8px rgba(255,32,32,.5))}
+.news-btn-arrow span:nth-child(2){animation-delay:.15s;opacity:.6;font-size:16px}
+.news-btn-arrow span:nth-child(3){animation-delay:.3s;opacity:.3;font-size:12px}
+@keyframes arrp{0%{transform:translateX(0);opacity:.5}100%{transform:translateX(8px);opacity:1}}
+@media(max-width:600px){.news-btn-title{font-size:11px;letter-spacing:2px}.news-btn-sub{font-size:18px;letter-spacing:3px}.news-btn-inner{padding:16px 16px;gap:12px}.news-btn-hint{display:none}}
+</style>
+</head>
+<body>
+<div class="cosmic-bg"></div><div class="scanline"></div><div class="glitch-overlay"></div>
+
+<header class="header"><div class="header-inner"><div class="logo">ΑΡΧΩΝ</div><div class="hstat"><span style="display:flex;align-items:center;gap:8px"><span class="sdot"></span> Канал Света</span><span>ЧЗХ: <span style="color:var(--gron)">МАКС</span></span><span class="htime" id="hTime">--:--:--</span></div></div></header>
+
+<nav class="nav-ribbon"><div class="ticker"><div class="ti"><span class="u">⚠ СРОЧНО</span> — Бог: «Я ТАКОГО НЕ ДЕЛАЛ» — ГронПукарианцы оказались нацистами с Нибиру — «Иноземный Третий Рейх» — ЧЗХ</div><div class="tsep">◆</div><div class="ti"><span class="g">⬡ РАСШИФРОВКА</span> — Код 12441124113562789124 частично расшифрован — Китайщина в конце оказалась печатью Цинской почты — ЧТО</div><div class="tsep">◆</div><div class="ti">Фиолетовая хуйня ползёт — «Purpura Cacatio» — Париж фиолетовый — Бог в ярости</div><div class="tsep">◆</div><div class="ti"><span class="d">✦ БАТЛ</span> — Бог разорвал бит — ГронПукарианец ответил «КХ'АНАКХХ» — Зрители: 8.2 млрд</div><div class="tsep">◆</div><div class="ti"><span class="u">⚠ ПОЗОР</span> — Сайт BattleZone признан худшим порталом во Вселенной — «Бесплатный хостинг на .website» — Даже гоблины лыбятся</div><div class="tsep">◆</div><div class="ti"><span class="u">⚠ СРОЧНО</span> — Бог: «Я ТАКОГО НЕ ДЕЛАЛ» — ГронПукарианцы оказались нацистами с Нибиру — «Иноземный Третий Рейх» — ЧЗХ</div><div class="tsep">◆</div><div class="ti"><span class="g">⬡ РАСШИФРОВКА</span> — Код 12441124113562789124 частично расшифрован — Китайщина в конце оказалась печатью Цинской почты — ЧТО</div><div class="tsep">◆</div><div class="ti">Фиолетовая хуйня ползёт — «Purpura Cacatio» — Париж фиолетовый — Бог в ярости</div><div class="tsep">◆</div><div class="ti"><span class="d">✦ БАТЛ</span> — Бог разорвал бит — ГронПукарианец ответил «КХ'АНАКХХ» — Зрители: 8.2 млрд</div><div class="tsep">◆</div><div class="ti"><span class="u">⚠ ПОЗОР</span> — Сайт BattleZone признан худшим порталом во Вселенной — Даже гоблины лыбятся</div></div></nav>
+
+<main class="main">
+
+<!-- HERO -->
+<section class="hero anim">
+<div class="czh" style="top:10%;left:5%;font-size:120px">ЧЗХ</div>
+<div class="czh" style="top:60%;right:5%;font-size:80px;animation-delay:-7s">БЛЯТЬ</div>
+<img src="gron1.png" class="hero-img" alt="">
+<div class="hero-corners"><div class="hcr tl"></div><div class="hcr tr"></div><div class="hcr bl"></div><div class="hcr br"></div></div>
+<div class="hero-content">
+<div class="hep">Эпоха Света — Цикл ЧЗХ — День 847</div>
+<div class="hdt">7 марта 2147 по Новому Священному Календарю</div>
+<h1>Бог vs ГронПукарианцы:<br>Война, которую<br>никто не заказывал</h1>
+<p class="hsub">Они пришли с Нибиру. Они хотели свободу. Бог их не создавал. Камни, руны, фиолетовая дрянь, кулак из света и мелкий гоблин с ухмылкой. Ещё они оказались нацистами. Ещё у них есть сайт на бесплатном хостинге. ЧЗХ-уровень: бесконечность.</p>
+<div class="hq"><p>«Я БОГ. Я делал горы, звёзды, людей. Я ТАКОГО НЕ ДЕЛАЛ. ЧЗХ БЛЯТЬ. ЧЗХ. ЧЗХ. ЧЗХ.»</p><div class="s">— Всевышний, первый контакт</div></div>
+</div></section>
+
+<!-- LIVE -->
+<div class="live-strip anim d1"><div class="lb">● LIVE</div><div class="lt">Бог в эфире — Второй батл в процессе — ГронПукарианец орёт «КХ'АНАКХХ» — Бог: «Я создал ЯЗЫК, на котором ты пытаешься читать свои панчи» — 8.2 млрд зрителей</div></div>
+
+<!-- VIDEO -->
+<section class="vsec anim d2">
+<div class="slabel">Прямой Эфир — Священная Трансляция — Нацистские ГронПукарианцы</div>
+<div class="vwrap">
+<div class="vinner">
+<video autoplay loop muted playsinline id="mainVid"><source src="gronpuk.mp4" type="video/mp4"></video>
+</div>
+<div class="vhud">
+<div class="vhud-top"><div class="vhtag">Канал Серафимов — 777.7 Ghz — СИГНАЛ ПЕРЕХВАЧЕН</div><div class="vhlive"><span class="dot"></span> ПРЯМОЙ ЭФИР</div></div>
+<div class="vhud-bottom"><div class="vhhl"><h2>Перехвачена трансляция ГронПукарианцев: нацистский ритуал на Нибиру</h2><p>Корреспондент Уриил — Из зоны аномалий — ВНИМАНИЕ: Содержит фиолетовую хуйню</p></div><div class="vhst">Зрители: 8.2 млрд<br>ЧЗХ-индекс: 97%<br>Фиолетовость: ████ 89%</div></div>
+</div>
+<div class="vedge"></div>
+</div></section>
+
+<!-- TIMELINE -->
+<section class="timeline-section anim d3">
+<div class="slabel">Хронология Конфликта — Полная Реконструкция Событий</div>
+<div class="timeline">
+
+<div class="tl-item event-signal">
+<div class="tl-date">День 0 — Первое Упоминание — Сигнал с Нибиру</div>
+<div class="tl-tag sig">⬡ Первый Контакт</div>
+<h3>Загадочный сигнал перехвачен Небесной Разведкой</h3>
+<p>Ангельские дешифровщики зафиксировали передачу с неизвестного источника. Содержание повергло все 7 сфер в замешательство:</p>
+<div class="tl-code">Ук ∈ {пук ⊕ грон}
+пук ⊗ грон = ∞ тепла
+Джим = зог-зог
+шмыг-шмыг... фиу-фиу...
+↓↓↓
+пук грон пук грон
+❄️ → 🍑🥚 → ⚡️⚡️⚡️
+Нибиру зовёт:
+>>> зог в грон <<<
+>>> пук в пук <<<
+░▒▓█ ГЛЫК-ХХХ █▓▒░
+🍑🥚👽=== ЗОГ ===👽🥚🍑</div>
+<p>Лингвисты Небесного Института попросили отпуск. Все 847 человек. Одновременно.</p>
+</div>
+
+<div class="tl-item event-signal">
+<div class="tl-date">День 0 — Ответ с Земли</div>
+<div class="tl-tag sig">⬡ Земной Ответ</div>
+<h3>Земляне попытались ответить на языке ГронПукарианцев</h3>
+<div class="tl-code">ыгххы гыы гхыы пук грон ыгх гхыыыхыхы пук грон гыы ыгххы гхыы ыгх грон пук гыы гхыы ыгххы грон пук ыгх гыы гхыыхыхы ыгххы пук грон гыы гхыы ыгх пук грон гыы гхыы ыгххы грон пук гыы гхыы ыгх гыы грон пук гхыыыхыхы ыгххы гыы грон пук ыгх гхыы...</div>
+<p>Бог, увидев ответ: «ПОДОЖДИТЕ. ВЫ СЕРЬЁЗНО ПЫТАЕТЕСЬ ОБЩАТЬСЯ С ЭТИМ? ЧЗХ.»</p>
+</div>
+
+<div class="tl-item event-signal">
+<div class="tl-date">День 1 — Ответ ГронПукарианцев</div>
+<div class="tl-tag sig">⬡ Ответ Пришельцев</div>
+<h3>ГронПукарианцы прислали цифры и... печать Цинской почты?!</h3>
+<img src="gron1.png" class="tl-img" alt="ГронПукарианец">
+<p>Первое визуальное подтверждение: камни, руны, фиолетовая субстанция, кулак из света и мелкий гоблин с ухмылкой «Гыы Грон Пук».</p>
+<div class="tl-code">1244112411356278912424113562789 2111244112411101243562789124...
+行。此信经大淸邮政总督办查验无误。准予驰递。光绪二十三年。京都</div>
+<p>В конце сообщения — печать Цинской почтовой службы 1897 года. ПОЧЕМУ. ЗАЧЕМ. Бог лично запросил объяснение. Объяснения нет.</p>
+</div>
+
+<div class="tl-item event-god">
+<div class="tl-date">День 1 — Реакция Бога</div>
+<div class="tl-tag god">✦ Реакция Всевышнего</div>
+<h3>«БЛЯЯЯЯЯТЬ ЧЕЕЕЕЕЕЕЕЕ» — Стенограмма первого шока</h3>
+<img src="gron2.png" class="tl-img" alt="Реакция Бога">
+<div class="tl-scream">БЛЯЯЯЯЯТЬ ЧЕЕЕЕЕЕЕЕЕ<br>ЧЗХ????<br>Я БОГ.</div>
+<div class="tl-quote"><p>«Я делал горы, блять, всякую хуйню космическую. Я ТАКОГО НЕ ДЕЛАЛ. ЧЕ ЭТО БЛЯТЬ. Камни стоят, руны светятся, фиолетовая хуйня ползёт, кулак из света вылез, и какой-то мелкий гоблин лыбится как будто он сейчас что-то пиздец какое сделает.»</p><div class="attr">— Всевышний</div></div>
+<div class="tl-quote"><p>«Я проверяю всё в голове: горы мои, звёзды мои, люди мои. ЭТО НЕ МОЁ БЛЯТЬ. И ещё сообщение это ебанутое: 12441124113562789124... ЧЕ ЭТО ЗА ЦИФРЫ БЛЯТЬ. И потом вообще китайщина какая-то в конце.»</p><div class="attr">— Всевышний, продолжение</div></div>
+<div class="tl-scream">КТО ЭТО СДЕЛАЛ<br>Я БОГ Я ТАКОЙ ХУЙНИ НЕ ДЕЛАЛ<br>ЧЗХ БЛЯТЬ<br>ЧЗХ ЧЗХ ЧЗХ</div>
+</div>
+
+<div class="tl-item event-war">
+<div class="tl-date">День 3 — Нацистский Ответ</div>
+<div class="tl-tag war">⚠ Они Оказались Нацистами</div>
+<h3>ГронПукарианцы объявили «Иноземный Третий Рейх» — ответ на нибируанском</h3>
+<p>Вместо мирного ответа ГронПукарианцы прислали агрессивное послание, в котором упоминается «Иноземный Третий Рейх» и «вечный портал в бездну»:</p>
+<div class="tl-alien">КХ'АНАКХХХХХХХХХХХХХХХХХХХХХХХХХХХХХХХ!
+ШНА'РРРРРРРРРРРРРРРРРРРРРРРРРРРРРРРРР!
+В'РАКС ДАЙЯ'КУРА К'ТХУЛЛЛЛЛЛЛЛЛЛЛЛЛЛЛЛЛЛЛЛЛ!
+КХЛЛЛ-ШНАР ВАКС'ШНАР АНА'КХ ДАЙЯ'КУРА!</div>
+<p>Небесные лингвисты перевели: «Мы вечны, ваш Бог — самозванец, наш Рейх восстанет, преклонитесь». Бог прочитал и просто стоял молча 4 секунды. Потом сказал одно слово. Вы знаете какое.</p>
+</div>
+
+<div class="tl-item event-batl">
+<div class="tl-date">День 7 — Батл Века</div>
+<div class="tl-tag batl">🎤 Батл</div>
+<h3>«БЛЯЯЯТЬ, Я ВЫЗЫВАЮ ЕГО НА БАТЛ» — Бог взял микрофон</h3>
+<div class="tl-quote"><p>«Он сидит там, весь такой наглый, руны светятся, фиолетовая хуйня ползёт, кулак из света вылез — и улыбается. Я такой: СТОП. Я БОГ. Я делал горы, океаны, звёзды, людей. Я ТАКОГО НЕ ДЕЛАЛ.»</p><div class="attr">— Всевышний, перед батлом</div></div>
+<div class="tl-scream">— Я БОГ!<br>— Я ДЕЛАЛ ВСЁ ЭТО!<br>— ТВОИ РУНЫ? МОИ СЛОВА РАЗЪЕБУТ ИХ!<br>— ЧЗХ БЛЯТЬ, ЧЗХ, ЧЗХ!</div>
+<p>Бог разорвал бит своим голосом. Весь магический цирк ГронПукарианца улетел к чертям. Каждая попытка противника — «как мелкий гоблин, которого я раздавлю словом.» Результат: 9.7/10 по шкале Небесного Кринжа.</p>
+</div>
+
+<div class="tl-item event-batl">
+<div class="tl-date">День 7 — Ответный Дисс ГронПукарианца</div>
+<div class="tl-tag batl">🎤 Ответка</div>
+<h3>«Йо-йо-йо, BattleZone, в эфире сам Гыы Грон Пук» — Ответ с Нибиру</h3>
+<div class="tl-quote" style="border-color:var(--gron)"><p>«Бог, ты меня на баттл вызвал, дисс кинул? Ха, я только лыбнулся! Ты орёшь «БЛЯЯТЬ ЧЗХ», руны мои светятся — это мой стиль, а твой кулак света — жалкий фокус! Горы, океаны, звёзды — вчерашний день, мой иноземный Третий Рейх вечный!»</p><div class="attr">— Гыы Грон Пук, переведено с нибируанского Zlo_v_Tapkah для BattleZone</div></div>
+<p>«Каждый твой ЧЗХ — слабый бит под моим каблуком! Я разнесу твой цирк одним ГЫЫЫ!» — заявил ГронПукарианец. Дисс был опубликован эксклюзивно на BattleZone — сайте, о котором мы поговорим отдельно (спойлер: это позорище).</p>
+</div>
+
+<div class="tl-item event-war">
+<div class="tl-date">День 10 — Бог Взял Оружие</div>
+<div class="tl-tag war">⚠ Полный Пиздец</div>
+<h3>«ХВАТИТ БАТЛОВ. ХВАТИТ СЛОВ. Я ВЗЯЛ СТВОЛ.» — Бог перешёл к физическим мерам</h3>
+<img src="bitva.png" class="tl-img" style="max-width:100%;opacity:1;filter:saturate(1.1) contrast(1.05)" alt="Бог расстреливает ГронПукарианцев">
+<div class="tl-quote"><p>«Я пробовал по-хорошему. Я пробовал словами. Я пробовал батлом. Они ответили диссом НА БЕСПЛАТНОМ ХОСТИНГЕ. Всё. Я взял автомат. Я БОГ, мне можно.»</p><div class="attr">— Всевышний, перед Битвой при Нибиру</div></div>
+<p>Бог лично спустился на поверхность Нибиру и открыл огонь по фиолетовым тварям. Орда ГронПукарианцев — тысячи лыбящихся гоблинов — ринулась навстречу. Бог стрелял, они лыбились. Бог стрелял сильнее — они лыбились шире. Один даже крикнул «ГЫЫЫ» перед тем как улететь в стратосферу.</p>
+<div class="tl-scream">Я СОЗДАЛ ПОРОХ.<br>Я СОЗДАЛ МЕТАЛЛ.<br>Я СОЗДАЛ ФИЗИКУ ОТДАЧИ.<br>И СЕЙЧАС Я ПРИМЕНЮ ВСЁ ЭТО К ВАШИМ ЕБАЛЬНИКАМ.</div>
+<p>Результат: 847 ГронПукарианцев уничтожено, 12,000 продолжают лыбиться, фиолетовая хуйня никуда не делась. Бог: «ДАЖЕ ПУЛИ НЕ ПОМОГАЮТ? ЧЗХ В ЧЕТВЁРТОЙ СТЕПЕНИ.»</p>
+</div>
+
+</div>
+</section>
+
+<!-- BATTLEZONE ROAST -->
+<section class="bz-roast anim d4">
+<div class="bz-header">
+<div class="bz-badge">☠ ПОЗОРИЩЕ</div>
+<h2>BattleZone — Худший Портал Во Всех 7 Измерениях</h2>
+</div>
+<div class="bz-url">https://battlezone.static2.website/ — да, это реальный адрес. На бесплатном хостинге. В 2147 году.</div>
+<div class="bz-body">
+<div>
+<p>Именно здесь ГронПукарианец «Гыы Грон Пук» опубликовал свой «эксклюзивный дисс». На портале <b style="color:var(--red)">BattleZone</b> — сайте, который выглядит как будто его делал тот самый мелкий гоблин, который лыбится.</p>
+<p style="margin-top:12px">Домен <code style="color:var(--gron)">.static2.website</code> — БЕСПЛАТНЫЙ ХОСТИНГ. Иноземный Третий Рейх, вечный портал в бездну, пафос выше космоса — а сайт на БЕСПЛАТНОМ ХОСТИНГЕ. Бог создал Вселенную, а эти не могут купить нормальный домен.</p>
+<p style="margin-top:12px">Дизайн сайта выглядит как будто его собирали из обрезков с того бугорка, который ГронПукарианец пытался выдать за гору. Вёрстка кривая, шрифты стандартные, никакой адаптивности — ПОЗОРИЩЕ КОСМИЧЕСКОГО МАСШТАБА.</p>
+<p style="margin-top:12px">Бог прокомментировал: <span style="color:var(--gold)">«Я создал ИНТЕРНЕТ, через который они это публикуют. И ОНИ ИСПОЛЬЗУЮТ МОЙ ИНТЕРНЕТ для БЕСПЛАТНОГО ХОСТИНГА чтобы кидать МНЕ ДИСС? ЧЗХ В КВАДРАТЕ.»</span></p>
+</div>
+<div class="bz-stats">
+<div class="bz-stat"><span class="l">Домен</span><span class="v">.static2.website 💀</span></div>
+<div class="bz-stat"><span class="l">Хостинг</span><span class="v">БЕСПЛАТНЫЙ</span></div>
+<div class="bz-stat"><span class="l">SSL-сертификат</span><span class="v">Просрочен</span></div>
+<div class="bz-stat"><span class="l">Дизайн</span><span class="v">2003 год</span></div>
+<div class="bz-stat"><span class="l">Mobile-версия</span><span class="v">Отсутствует</span></div>
+<div class="bz-stat"><span class="l">Время загрузки</span><span class="v">47 сек 💀</span></div>
+<div class="bz-stat"><span class="l">PageSpeed</span><span class="v">3 / 100</span></div>
+<div class="bz-stat"><span class="l">Посетители/мес</span><span class="v">12 (все боты)</span></div>
+<div class="bz-stat"><span class="l">SEO-оценка</span><span class="v">«Удалите сайт»</span></div>
+<div class="bz-stat"><span class="l">Оценка Бога</span><span class="v">ЧЗХ / 10</span></div>
+</div>
+</div>
+<div class="bz-verdict"><p>Официальный вердикт Небесной Комиссии по Качеству: «Даже фиолетовая хуйня выглядит лучше этого сайта»</p></div>
+</section>
+
+<!-- GAME -->
+<section class="gsec anim d3">
+<div class="slabel">Интерактив — «Генезис: Как Всё Начиналось»</div>
+<div class="gc"><div class="gf" id="gF">
+<canvas id="gC" style="position:absolute;top:0;left:0;width:100%;height:100%"></canvas>
+<div class="gui"><div class="gui-c gui-tl">GENESIS ENGINE v7.1</div><div class="gui-c gui-tr">FPS: <span id="gFps">60</span><br>PING: <span id="gPing">12</span>ms</div><div class="gui-c gui-bl">Сервер: Небесный-α</div></div>
+<div class="gso" id="gO"><div class="gt">Генезис</div><div class="gst">Как Всё Начиналось</div><div class="gd">Вы — Бог. Уничтожайте ГронПукарианцев кликом, собирайте Свет, не дайте фиолетовой хуйне победить.</div><button class="gpb" id="gB"><span style="font-size:18px">▶</span> Начать ЧЗХ</button></div>
+<div class="ghb"><span>Unity WebGL 2147.3</span><span>Антифиолетовый модуль: ON</span><span id="gS">Ожидание...</span></div>
+</div></div></section>
+
+<!-- UNITY GAME -->
+<div class="live-strip anim d3" style="margin-top:0;border-color:rgba(212,175,55,.3);background:linear-gradient(90deg,rgba(212,175,55,.08),rgba(155,48,255,.05),rgba(212,175,55,.08))"><div class="lb" style="background:var(--gold);color:var(--void)">✦ ПОБЕДА</div><div class="lt">ПЕРВАЯ ПОБЕДА БОГА НАД ГРОНПУКАРИАНЦАМИ — Всевышний лично зашёл в игру и разъебал всю фиолетовую хуйню за 12 секунд — ГронПукарианец: «Гыы...» — Бог: «ГЫЫ БЛЯТЬ? ГЫЫ?! Я СОЗДАЛ ФИЗИКУ, НА КОТОРОЙ ЭТА ИГРА РАБОТАЕТ. СЯДЬ НАХУЙ.» — Гоблин всё ещё лыбится</div></div>
+<section class="usec anim d4">
+<div class="slabel">Боевой Симулятор — GameTest — Unity WebGL</div>
+<div class="uc">
+<div class="uf" id="uF">
+<canvas id="unity-canvas-embed" tabindex="-1" style="width:100%;height:100%"></canvas>
+<div id="unity-loading-overlay">
+<div class="uload-title">GameTest</div>
+<div class="uload-sub">Загрузка боевого модуля</div>
+<div class="uload-bar"><div class="uload-fill" id="uFill"></div></div>
+<div class="uload-pct" id="uPct">0%</div>
+</div>
+<div class="ugui">
+<div class="ugui-top">
+<div class="ugui-tag">GameTest — Lob Inc. — v2.0.1</div>
+<div class="ugui-ver">Unity WebGL</div>
+</div>
+</div>
+<div class="uedge"></div>
+</div>
+<div class="uhb"><span>Lob Inc. — GameTest v2.0.1</span><span>WebGL 2.0</span><span id="uStatus">Загрузка...</span></div>
+</div>
+</section>
+
+<!-- BREAKING NEWS BUTTON -->
+<section class="anim d4" style="max-width:1600px;margin:40px auto;padding:0 40px">
+<a href="news.html" class="news-btn" id="newsBtn">
+<div class="news-btn-flash"></div>
+<div class="news-btn-corner tl"></div><div class="news-btn-corner tr"></div><div class="news-btn-corner bl"></div><div class="news-btn-corner br"></div>
+<div class="news-btn-inner">
+<div class="news-btn-badge">● LIVE</div>
+<div class="news-btn-text">
+<span class="news-btn-title">СРОЧНЫЙ ВЫПУСК НОВОСТЕЙ</span>
+<span class="news-btn-sub">ЭТО ПИЗДЕЦ</span>
+<span class="news-btn-hint">▸ Нажмите для просмотра экстренного репортажа</span>
+</div>
+<div class="news-btn-arrow"><span>▶</span><span>▶</span><span>▶</span></div>
+</div>
+</a>
+</section>
+
+<!-- NEWS -->
+<section class="nsec anim d4">
+<div class="slabel">Новостная Лента</div>
+<div class="ng">
+<article class="nc f"><div class="ncv"><img src="gron2.png" alt=""></div><div class="nci"><div class="nct bt">🎤 Батл</div><h3>Бог разнёс ГронПукарианца за 47 секунд — тот ответил диссом на позорном сайте</h3><p>Всевышний разорвал бит голосом. Гыы Грон Пук ответил диссом, опубликованным на BattleZone — сайте с доменом .static2.website. «Он говорит "мой пафос выше космоса" — а сайт на бесплатном хостинге. Я создал космос И интернет. ЧЗХ в кубе» — прокомментировал Бог.</p><div class="nm"><span>Батл-Комитет</span><span>7 мин</span></div></div></article>
+<article class="nc m"><div class="ncv"><img src="gron1.png" alt=""></div><div class="nci"><div class="nct gr">⬡ ГронПуки</div><h3>Расшифрована Цинская печать: почтовая марка 1897 года в послании пришельцев</h3><p>«行。此信经大淸邮政总督办查验无误» — «Данное письмо проверено Главным почтовым управлением Цин». Зачем нибируанским нацистам китайская почтовая печать 1897 года — не понимает НИКТО.</p><div class="nm"><span>Институт ЧЗХ</span><span>23 мин</span></div></div></article>
+<article class="nc m"><div class="nci"><div class="nct dv">✦ Язык</div><h3>«Гыы грон пук ыгх» — полный словарь ГронПукарианского языка опубликован</h3><p>Состоит из 7 слов: гыы, грон, пук, ыгх, ыгххы, гхыы, гхыыыхыхы. Учёные: «Это не язык, это звуки кишечника.» Бог: «Ну хоть что-то объясняет название.»</p><div class="nm"><span>Лингвистика</span><span>41 мин</span></div></div></article>
+<article class="nc m"><div class="nci"><div class="nct br">⚠ Угроза</div><h3>«Иноземный Третий Рейх» — ГронПукарианцы оказались нацистами</h3><p>В дисс-треке прямо заявлено: «мой иноземный Третий Рейх вечный». Нацисты с Нибиру, говорящие на языке кишечных звуков, с Цинской почтовой печатью, на бесплатном хостинге. ЧЗХ-индекс зашкалил.</p><div class="nm"><span>Разведка</span><span>1 час</span></div></div></article>
+<article class="nc w"><div class="nci"><div class="nct tc">◈ Наука</div><h3>«Purpura Cacatio» — Фиолетовая хуйня получила латинское название и доползла до 23 городов</h3><p>847 дней исследований не дали результата. Субстанция ползёт, красит всё фиолетовым, не реагирует ни на молитвы, ни на науку. Единственное, что её останавливает — слово «ЧЗХ», произнесённое Богом лично. Учёные: «Мы сдались.»</p><div class="nm"><span>Институт</span><span>2 часа</span></div></div></article>
+<article class="nc w"><div class="nci"><div class="nct cu">❋ Мемы</div><h3>«КХ'АНАКХХ» стало вторым по популярности мемом после «ЧЗХ БЛЯТЬ»</h3><p>Боевой клич ГронПукарианцев используется как рингтон у 1.2 млрд человек. Ангелы «ЧЗХ SQUAD» записали ремикс. Бог: «Я создал звук. И они используют мой звук, чтобы орать КХ'АНАКХХ. ЧЗХ.»</p><div class="nm"><span>Культурный Совет</span><span>3 часа</span></div></div></article>
+<article class="nc m"><div class="nci"><div class="nct br">⚠ Дипломатия</div><h3>ГронПукарианцы прислали мирный договор — написан на туалетной бумаге</h3><p>Документ на 3 метра, язык — смесь нибируанского и звуков поноса. Пункт 1: «Бог отдаёт нам Солнце». Пункт 2: «И ещё Луну». Пункт 3: «ГЫЫЫ». Бог прочитал, посмотрел молча, порвал, скомкал, и запустил обратно на Нибиру со скоростью света.</p><div class="nm"><span>МИД Небесный</span><span>4 часа</span></div></div></article>
+<article class="nc m"><div class="nci"><div class="nct tc">◈ Наука</div><h3>ГронПукарианец попытался создать солнце — получился фонарик за 200 рублей</h3><p>«Великое Светило Рейха» — так он назвал объект диаметром 8 см, который светит слабее зажигалки. Бог посмотрел и впервые за 847 дней засмеялся. Потом вспомнил, что они нацисты, и перестал.</p><div class="nm"><span>Астрономия</span><span>5 часов</span></div></div></article>
+<article class="nc w"><div class="nci"><div class="nct gr">⬡ Армия</div><h3>ГронПукарианский генерал оказался ростом 47 см — командует армией из табуретки</h3><p>Генерал Гхыы'Шнар — верховный главнокомандующий «Иноземного Третьего Рейха» — ведёт войну, стоя на табуретке из фиолетовой хуйни. Табуретка плавится. Генерал падает. Армия лыбится. Бог: «Это самый жалкий блицкриг в истории всех вселенных, которые я создал. А я создал ВСЕ.»</p><div class="nm"><span>Разведка</span><span>6 часов</span></div></div></article>
+<article class="nc m"><div class="nci"><div class="nct dv">✦ Кухня</div><h3>Раскрыт рацион ГронПукарианцев: камни, руны и «фиолетовый суп»</h3><p>Меню нибируанской столовой: завтрак — варёный камень с рунами. Обед — тушёная фиолетовая хуйня. Ужин — то же самое, но с надписью «деликатес». Бог: «Я создал ЕДУ. Нормальную. Пиццу, блять. Стейки. А они жрут КАМНИ. ЧЗХ.»</p><div class="nm"><span>Кулинарный Совет</span><span>7 часов</span></div></div></article>
+<article class="nc m"><div class="nci"><div class="nct bt">🎤 Культура</div><h3>ГронПукарианский рэпер выпустил альбом — все 12 треков одинаковые</h3><p>Альбом «ГЫЫЫ: The Album» содержит 12 треков. Все называются «ГЫЫЫ» с номером. Все длятся ровно 47 секунд. Во всех один текст: «ГЫЫЫ ГЫЫЫ КХ'АНАКХХ ГЫЫЫ». Рецензия Бога: «Я создал музыку. Баха, Моцарта, джаз. И вот ЭТО — результат? Может мне стоило НЕ создавать звук.»</p><div class="nm"><span>Муз. Критика</span><span>8 часов</span></div></div></article>
+<article class="nc w"><div class="nci"><div class="nct br">⚠ Спорт</div><h3>ГронПукарианцы провели Олимпиаду — единственная дисциплина: «Кто громче пукнет»</h3><p>Золото взял Гыы Грон Пук лично — 147 децибел. Серебро — его собственное эхо. Бронза — фиолетовая хуйня, которая как-то тоже пукнула. Бог не комментировал. Бог просто ушёл и 4 часа сидел в тишине.</p><div class="nm"><span>Спорт. Комитет</span><span>9 часов</span></div></div></article>
+</div></section>
+
+<!-- SIDEBAR -->
+<section class="sidebar anim d5">
+<div><div class="slabel" style="margin-bottom:20px">Хронолента</div><div class="fs">
+<div class="fi"><div class="ft">03:41</div><div class="fc"><h4>Глагол «ГронПукнуть» внесён в словари — означает «сделать что-то максимально бессмысленно и на бесплатном хостинге»</h4></div><div class="ftag">Язык</div></div>
+<div class="fi"><div class="ft">03:12</div><div class="fc"><h4>Гоблин лыбится. 2 архангела заражены улыбкой. Карантин объявлен</h4><p>Бог: «ДАЖЕ МОИ АРХАНГЕЛЫ? ЧЗХ»</p></div><div class="ftag">Фронт</div></div>
+<div class="fi"><div class="ft">02:48</div><div class="fc"><h4>Цинская печать 1897г в послании ГронПуков — историки в коме</h4><p>«光绪二十三年» — 23-й год правления Гуансюя. При чём тут Нибиру?!</p></div><div class="ftag">WTF</div></div>
+<div class="fi"><div class="ft">02:14</div><div class="fc"><h4>BattleZone упал — 12 ботов-посетителей не выдержали нагрузку</h4><p>Хостинг бесплатный, сервер не тянет</p></div><div class="ftag">Позор</div></div>
+<div class="fi"><div class="ft">01:33</div><div class="fc"><h4>ГронПукарианец создал бугорок 40 см вместо горы. Назвал «Великая Гора Рейха»</h4><p>Бог: «Ахахахаха»</p></div><div class="ftag">Юмор</div></div>
+<div class="fi"><div class="ft">01:02</div><div class="fc"><h4>ЧЗХ SQUAD feat. Бог — трек набрал 4 млрд за час</h4><p>Припев: «КХ'АНАКХХ — ЧЗХ — КХ'АНАКХХ — ЧЗХ»</p></div><div class="ftag">Муз</div></div>
+<div class="fi"><div class="ft">00:27</div><div class="fc"><h4>Перевод китайских символов: «Мы просто хотели пожрать»</h4><p>Бог: «ВСЯ ХУЙНЯ РАДИ ЕДЫ?! Ещё и нацисты при этом?!»</p></div><div class="ftag">WTF</div></div>
+<div class="fi"><div class="ft">00:04</div><div class="fc"><h4>Бог: «Панчи? Я создал ЯЗЫК, на котором ты их читаешь. И ИНТЕРНЕТ, на котором ты их публикуешь. НА БЕСПЛАТНОМ ХОСТИНГЕ.»</h4></div><div class="ftag">Батл</div></div>
+<div class="fi"><div class="ft">00:01</div><div class="fc"><h4>ГронПукарианец попытался взломать сайт Бога — забыл, что Бог создал интернет</h4><p>Хакер по кличке «Гхыы_Лит» получил в ответ 404 ошибку с текстом: «Я БОГ, ебать. Иди нахуй обратно на .static2.website»</p></div><div class="ftag">Кибер</div></div>
+<div class="fi"><div class="ft">23:58</div><div class="fc"><h4>Фиолетовая хуйня научилась говорить — первое слово: «ГЫЫЫ»</h4><p>Бог: «Я создал 6000 языков. И эта хуйня выбрала ИХ язык? Предательство фиолетового масштаба»</p></div><div class="ftag">ЧЗХ</div></div>
+<div class="fi"><div class="ft">23:30</div><div class="fc"><h4>ГронПукарианский посол прибыл на переговоры — оказался надувным</h4><p>Протокольная служба 40 минут вела переговоры с надувным гоблином. Бог: «Вы блять серьёзно?!»</p></div><div class="ftag">WTF</div></div>
+<div class="fi"><div class="ft">23:01</div><div class="fc"><h4>ГронПукарианцы выставили счёт Богу за «эмоциональный ущерб» — 47 камней и 3 руны</h4><p>Валюта Нибиру: камни. Экономика: бартер. ВВП: 1 бугорок. МВФ отказался комментировать.</p></div><div class="ftag">Эконом</div></div>
+<div class="fi"><div class="ft">22:44</div><div class="fc"><h4>Архангел Гавриил случайно лайкнул дисс ГронПукарианца — отстранён от должности</h4><p>Гавриил: «Палец соскользнул». Бог: «ПАЛЕЦ. СОСКОЛЬЗНУЛ. У АНГЕЛА. НА ДИСС НАЦИСТСКОГО ГОБЛИНА. ЧЗХ.»</p></div><div class="ftag">Скандал</div></div>
+<div class="fi"><div class="ft">22:12</div><div class="fc"><h4>Нибируанский McDonald's открылся — в меню: «Биг Гыыы» и «Грон-наггетсы»</h4><p>Отзыв Бога: «0 из 10. Я создал коров. Я создал пшеницу. А они лепят бургер из фиолетовой хуйни и камней»</p></div><div class="ftag">Еда</div></div>
+</div></div>
+<div><div class="dp"><div class="dpt">Состояние Мира</div>
+<div class="dr"><span class="l">ЧЗХ-Индекс</span><span class="v g">97.3%</span></div><div class="db"><div class="dbf" style="width:97.3%;background:var(--gron)"></div></div>
+<div class="dr"><span class="l">Фиолетовая Хуйня</span><span class="v d">РАСТЁТ</span></div><div class="db"><div class="dbf" style="width:64%;background:var(--gron)"></div></div>
+<div class="dr"><span class="l">Лыбящихся Гоблинов</span><span class="v g">12,847</span></div>
+<div class="dr"><span class="l">Батлов: Бог / ГронПук</span><span class="v s">1 / 0</span></div>
+<div class="dr"><span class="l">Раз Бог сказал ЧЗХ</span><span class="v">∞</span></div>
+<div class="dr"><span class="l">Цифр расшифровано</span><span class="v d">4 из ∞</span></div>
+<div class="dr"><span class="l">Цинских печатей</span><span class="v g">1 (зачем?)</span></div>
+<div class="dr"><span class="l">Средних пальцев из света</span><span class="v d">1</span></div>
+<div class="dr"><span class="l">Бугорков вместо гор</span><span class="v g">1 (40 см)</span></div>
+<div class="dr"><span class="l">Заражённых улыбкой</span><span class="v d">2 архангела</span></div>
+<div class="dr"><span class="l">Качество BattleZone</span><span class="v d">3/100 💀</span></div>
+<div class="dr"><span class="l">Футболок «ЧЗХ»</span><span class="v s">2.1 млрд</span></div>
+<div class="dr"><span class="l">Уровень угрозы</span><span class="v" style="color:var(--gron)">ЧЗХ</span></div>
+<div class="dr"><span class="l">Надувных послов</span><span class="v d">1 (переговоры шли)</span></div>
+<div class="dr"><span class="l">ВВП Нибиру</span><span class="v d">1 бугорок</span></div>
+<div class="dr"><span class="l">Рост генерала</span><span class="v g">47 см (с табуреткой)</span></div>
+<div class="dr"><span class="l">Треков «ГЫЫЫ»</span><span class="v s">12 (все одинаковые)</span></div>
+<div class="dr"><span class="l">Лайков Гавриила</span><span class="v d">1 (позорный)</span></div>
+<div class="dr"><span class="l">Нибиру McDonald's</span><span class="v d">0/10 💀</span></div>
+<div class="dr"><span class="l">Пуков на Олимпиаде</span><span class="v g">147 дБ (рекорд)</span></div>
+</div></div></section>
+
+</main>
+
+<footer class="footer"><div class="footer-logo">ΑΡΧΩΝ</div><div class="footer-text">Портал Эпохи ЧЗХ — Антифиолетовая Защита 7 — Не BattleZone (у нас нормальный хостинг)</div><div class="footer-text" style="margin-top:8px;opacity:.3">© 2147 Небесная Канцелярия — Лицензия №∞ — ГронПукарианцы не одобрены, не созданы и их сайт ужасен</div></footer>
+
+<script>
+setInterval(()=>{const n=new Date;document.getElementById('hTime').textContent=`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')} UTC+∞`},1e3);
+document.getElementById('mainVid').addEventListener('click',function(){this.muted=!this.muted});
+// GAME
+!function(){const fr=document.getElementById('gF'),c=document.getElementById('gC'),x=c.getContext('2d'),btn=document.getElementById('gB'),sEl=document.getElementById('gS');
+let w,h,on=false;function rs(){w=c.width=c.offsetWidth;h=c.height=c.offsetHeight}rs();window.addEventListener('resize',rs);
+let pl={x:0,y:0,tx:0,ty:0,tr:[]},en=[],ob=[],tx=[],sc=0,li=0,gt=0,ki=0;
+const st=[];for(let i=0;i<200;i++)st.push({x:Math.random(),y:Math.random(),s:Math.random()*1.5+.3,b:Math.random()});
+const msgs=['ЧЗХ!','БЛЯТЬ!','НЕ МОЁ!','ЧЕЕЕЕ!','КТО?!','ЧЗХ!!!','СТОП!','КХ-ЧТО?!'];
+function sE(){const s=Math.floor(Math.random()*4);let ex,ey;if(s===0){ex=Math.random()*w;ey=-20}else if(s===1){ex=w+20;ey=Math.random()*h}else if(s===2){ex=Math.random()*w;ey=h+20}else{ex=-20;ey=Math.random()*h}
+en.push({x:ex,y:ey,sp:.5+Math.random()*1.5,hp:1,sz:8+Math.random()*12,tp:['gron','goblin','rune'][Math.floor(Math.random()*3)]})}
+function sO(){ob.push({x:Math.random()*w,y:Math.random()*h,p:0})}
+function aT(ax,ay,t,c){tx.push({x:ax,y:ay,t,c,l:1,vy:-2})}
+fr.addEventListener('mousemove',e=>{if(!on)return;const r=c.getBoundingClientRect();pl.tx=e.clientX-r.left;pl.ty=e.clientY-r.top});
+fr.addEventListener('click',()=>{if(!on)return;let k=0;en.forEach(e=>{const dx=e.x-pl.x,dy=e.y-pl.y;if(Math.sqrt(dx*dx+dy*dy)<130){e.hp--;sc+=10;k++;ki++;aT(e.x,e.y,msgs[Math.floor(Math.random()*msgs.length)],e.tp==='goblin'?'#00ff88':'#9b30ff')}});if(!k)aT(pl.x,pl.y-20,'...','rgba(255,255,255,0.3)')});
+btn.onclick=()=>{on=true;fr.classList.add('active');pl.x=w/2;pl.y=h/2;pl.tx=w/2;pl.ty=h/2;pl.tr=[];en=[];ob=[];tx=[];sc=0;li=0;gt=0;ki=0;for(let i=0;i<5;i++)sO();sEl.textContent='Разъёбываем...'};
+let t=0;function draw(){t+=.01;gt+=.016;
+if(!on){x.fillStyle='rgba(8,8,16,0.1)';x.fillRect(0,0,w,h);st.forEach(s=>{x.fillStyle=`rgba(255,255,255,${(.5+Math.sin(t*2+s.b*10)*.5)*.4})`;x.fillRect(s.x*w,s.y*h,s.s,s.s)});
+for(let i=0;i<5;i++){const rx=w/2+Math.sin(t+i*1.2)*200,ry=h/2+Math.cos(t*.7+i*1.5)*100;x.font='20px serif';x.fillStyle=`rgba(155,48,255,${.1+Math.sin(t+i)*.05})`;x.fillText(['⬡','☩','✝','⚔','☀'][i],rx,ry)}
+x.font='bold 14px Orbitron';x.fillStyle=`rgba(212,175,55,${.05+Math.sin(t*.5)*.03})`;x.fillText('ЧЗХ',w/2+Math.sin(t*.3)*150-20,h/2+Math.cos(t*.4)*80);requestAnimationFrame(draw);return}
+x.fillStyle='rgba(5,5,10,0.3)';x.fillRect(0,0,w,h);st.forEach(s=>{x.fillStyle=`rgba(255,255,255,${.15+Math.sin(t+s.b*6)*.1})`;x.fillRect(s.x*w,s.y*h,s.s,s.s)});
+if(Math.random()<.03+gt*.001)sE();if(Math.random()<.005&&ob.length<8)sO();
+pl.x+=(pl.tx-pl.x)*.08;pl.y+=(pl.ty-pl.y)*.08;pl.tr.push({x:pl.x,y:pl.y,a:1});if(pl.tr.length>20)pl.tr.shift();
+pl.tr.forEach((p,i)=>{p.a-=.05;if(p.a>0){x.beginPath();x.arc(p.x,p.y,6*(i/20),0,Math.PI*2);x.fillStyle=`rgba(212,175,55,${p.a*.3})`;x.fill()}});
+const gp=x.createRadialGradient(pl.x,pl.y,0,pl.x,pl.y,70);gp.addColorStop(0,'rgba(255,255,255,0.3)');gp.addColorStop(.3,'rgba(212,175,55,0.15)');gp.addColorStop(1,'transparent');x.fillStyle=gp;x.fillRect(pl.x-70,pl.y-70,140,140);
+x.beginPath();x.arc(pl.x,pl.y,8,0,Math.PI*2);x.fillStyle='rgba(255,255,255,0.9)';x.fill();x.beginPath();x.arc(pl.x,pl.y,12,0,Math.PI*2);x.strokeStyle='rgba(212,175,55,0.5)';x.lineWidth=1;x.stroke();
+en=en.filter(e=>{const dx=pl.x-e.x,dy=pl.y-e.y,d=Math.sqrt(dx*dx+dy*dy);e.x+=dx/d*e.sp;e.y+=dy/d*e.sp;
+const cl=e.tp==='goblin'?[0,200,0]:e.tp==='rune'?[0,200,255]:[155,48,255];
+const g=x.createRadialGradient(e.x,e.y,0,e.x,e.y,e.sz);g.addColorStop(0,`rgba(${cl},.6)`);g.addColorStop(1,'transparent');x.fillStyle=g;x.fillRect(e.x-e.sz,e.y-e.sz,e.sz*2,e.sz*2);
+x.beginPath();x.arc(e.x,e.y,e.sz*.4,0,Math.PI*2);x.fillStyle=`rgba(${cl},.8)`;x.fill();
+if(e.tp==='goblin'){x.font='10px sans-serif';x.fillStyle='rgba(0,255,0,0.5)';x.fillText(':)',e.x-6,e.y+4)}
+if(d<15){li=Math.max(0,li-5);sc=Math.max(0,sc-5);aT(e.x,e.y,'ХАХА!','#9b30ff');return false}return e.hp>0});
+ob=ob.filter(o=>{o.p+=.05;const dx=pl.x-o.x,dy=pl.y-o.y,d=Math.sqrt(dx*dx+dy*dy);
+x.beginPath();x.arc(o.x,o.y,8+Math.sin(o.p)*3,0,Math.PI*2);x.fillStyle=`rgba(212,175,55,${.4+Math.sin(o.p)*.2})`;x.fill();
+x.beginPath();x.arc(o.x,o.y,14+Math.sin(o.p)*5,0,Math.PI*2);x.strokeStyle=`rgba(212,175,55,${.15+Math.sin(o.p)*.1})`;x.lineWidth=1;x.stroke();
+if(d<25){li=Math.min(100,li+10);sc+=25;aT(o.x,o.y,'+СВЕТ','#ffd700');return false}return true});
+tx=tx.filter(f=>{f.y+=f.vy;f.l-=.02;x.globalAlpha=Math.max(0,f.l);x.font='bold 12px Orbitron';x.fillStyle=f.c;x.fillText(f.t,f.x-20,f.y);x.globalAlpha=1;return f.l>0});
+x.fillStyle='rgba(0,0,0,0.5)';x.fillRect(10,10,200,8);x.fillStyle=`rgba(212,175,55,${.7+Math.sin(t*3)*.2})`;x.fillRect(10,10,li*2,8);
+x.font='11px Orbitron';x.fillStyle='rgba(232,230,227,0.6)';x.fillText(`СВЕТ: ${Math.floor(li)}%`,10,32);x.fillText(`ОЧКИ: ${sc}`,10,46);x.fillText(`ГРОНОВ: ${ki}`,10,60);
+document.getElementById('gFps').textContent=Math.floor(58+Math.random()*4);document.getElementById('gPing').textContent=Math.floor(10+Math.random()*5);
+requestAnimationFrame(draw)}draw()}();
+const obs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){el.target.style.opacity='1';el.target.style.transform='translateY(0)'}})},{threshold:.1});
+document.querySelectorAll('.anim').forEach(el=>obs.observe(el));
+
+// UNITY WEBGL EMBED
+!function(){
+var uc=document.getElementById('unity-canvas-embed');
+var overlay=document.getElementById('unity-loading-overlay');
+var fill=document.getElementById('uFill');
+var pct=document.getElementById('uPct');
+var uSt=document.getElementById('uStatus');
+var buildUrl='Build/Build';
+var loaderUrl=buildUrl+'/New folder.loader.js';
+var config={
+  dataUrl:buildUrl+'/New folder.data',
+  frameworkUrl:buildUrl+'/New folder.framework.js',
+  codeUrl:buildUrl+'/New folder.wasm',
+  streamingAssetsUrl:'StreamingAssets',
+  companyName:'Lob Inc.',
+  productName:'GameTest',
+  productVersion:'2.0.1'
+};
+var script=document.createElement('script');
+script.src=loaderUrl;
+script.onload=function(){
+  createUnityInstance(uc,config,function(p){
+    var v=Math.round(p*100);
+    fill.style.width=v+'%';
+    pct.textContent=v+'%';
+    uSt.textContent='Загрузка: '+v+'%';
+  }).then(function(instance){
+    overlay.classList.add('hidden');
+    uSt.textContent='Запущено';
+    window._unityInstance=instance;
+  }).catch(function(msg){
+    uSt.textContent='Ошибка загрузки';
+    pct.textContent=msg;
+    console.error('Unity error:',msg);
+  });
+};
+document.body.appendChild(script);
+}();
+</script>
+</body>
 </html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>СРОЧНЫЙ ВЫПУСК — Небесное Информационное Агентство</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@100;200;300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--gold:#d4af37;--void:#050508;--white:#e8e6e3;--red:#8b0000;--cyan:#00f0ff;--gron:#9b30ff}
+html{scrollbar-width:thin;scrollbar-color:var(--red) var(--void)}
+body{background:var(--void);color:var(--white);font-family:'Exo 2',sans-serif;overflow-x:hidden}
+
+/* SCANLINE */
+.scanline{position:fixed;top:0;left:0;width:100%;height:3px;z-index:9999;background:linear-gradient(90deg,transparent,var(--red),#ff4444,var(--red),transparent);animation:sd 4s linear infinite;opacity:.6;pointer-events:none}
+@keyframes sd{0%{top:-3px}100%{top:100vh}}
+
+/* BREAKING BANNER */
+.breaking-bar{position:fixed;top:0;left:0;width:100%;z-index:1000;background:var(--red);padding:0;overflow:hidden;border-bottom:2px solid #ff2020}
+.breaking-inner{display:flex;align-items:center;height:44px}
+.breaking-badge{font-family:'Orbitron';font-size:11px;font-weight:900;letter-spacing:4px;color:#fff;background:rgba(0,0,0,.4);padding:0 20px;height:100%;display:flex;align-items:center;white-space:nowrap;flex-shrink:0}
+.breaking-badge .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#fff;margin-right:10px;animation:pu 1s infinite}
+@keyframes pu{0%,100%{opacity:1}50%{opacity:.2}}
+.breaking-text{flex:1;overflow:hidden;white-space:nowrap}
+.breaking-scroll{display:inline-block;animation:scroll 25s linear infinite;font-family:'Rajdhani';font-size:14px;font-weight:600;letter-spacing:3px;color:#fff;text-transform:uppercase;padding-left:100%}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+
+/* HEADER */
+.news-header{margin-top:44px;padding:60px 40px 40px;text-align:center;border-bottom:1px solid rgba(139,0,0,.3);background:linear-gradient(180deg,rgba(139,0,0,.1),transparent)}
+.nia-logo{font-family:'Orbitron';font-size:12px;letter-spacing:10px;color:var(--red);opacity:.7;text-transform:uppercase;margin-bottom:16px}
+.nia-title{font-family:'Orbitron';font-size:clamp(24px,5vw,48px);font-weight:900;letter-spacing:6px;text-transform:uppercase;background:linear-gradient(135deg,#ff4444,var(--red),#ff2020);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.2;margin-bottom:12px}
+.nia-sub{font-family:'Rajdhani';font-size:clamp(14px,2.5vw,20px);letter-spacing:4px;color:rgba(232,230,227,.5);text-transform:uppercase}
+.nia-date{font-family:'Orbitron';font-size:11px;letter-spacing:3px;color:var(--red);margin-top:20px;opacity:.6}
+
+/* VIDEO */
+.video-section{max-width:1200px;margin:40px auto;padding:0 20px}
+.video-frame{position:relative;border:1px solid rgba(139,0,0,.4);border-radius:4px;overflow:hidden;background:#000;box-shadow:0 0 60px rgba(139,0,0,.15)}
+.video-frame video{display:block;width:100%;cursor:pointer}
+.video-hud{position:absolute;top:0;left:0;width:100%;padding:12px 16px;display:flex;justify-content:space-between;align-items:flex-start;background:linear-gradient(180deg,rgba(0,0,0,.7),transparent);pointer-events:none}
+.vhud-tag{font-family:'Rajdhani';font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.5);text-transform:uppercase}
+.vhud-live{font-family:'Orbitron';font-size:10px;letter-spacing:2px;color:var(--red);display:flex;align-items:center;gap:6px}
+.vhud-live .dot{width:6px;height:6px;border-radius:50%;background:#ff2020;animation:pu 1s infinite}
+.video-bottom{position:absolute;bottom:0;left:0;width:100%;padding:16px 20px;background:linear-gradient(0deg,rgba(0,0,0,.8),transparent);pointer-events:none}
+.video-bottom h3{font-family:'Exo 2';font-size:clamp(12px,2vw,16px);font-weight:600;color:#fff;margin-bottom:4px}
+.video-bottom p{font-family:'Rajdhani';font-size:11px;letter-spacing:2px;color:rgba(255,255,255,.4);text-transform:uppercase}
+.click-hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Orbitron';font-size:11px;letter-spacing:3px;color:rgba(255,255,255,.3);pointer-events:none;transition:opacity .3s}
+.video-frame:hover .click-hint{opacity:0}
+
+/* REPORT */
+.report{max-width:1000px;margin:60px auto;padding:0 30px}
+.report-block{border-left:2px solid var(--red);padding:24px 30px;margin-bottom:30px;background:linear-gradient(90deg,rgba(139,0,0,.06),transparent)}
+.report-block h3{font-family:'Orbitron';font-size:14px;font-weight:700;letter-spacing:3px;color:var(--red);text-transform:uppercase;margin-bottom:12px}
+.report-block p{font-family:'Exo 2';font-size:15px;line-height:1.8;color:rgba(232,230,227,.75);margin-bottom:10px}
+.report-quote{border-left:3px solid var(--gold);padding:16px 20px;margin:16px 0;background:rgba(212,175,55,.04)}
+.report-quote p{font-style:italic;color:var(--gold);font-size:16px;line-height:1.7}
+.report-quote .attr{font-family:'Rajdhani';font-size:11px;letter-spacing:3px;color:rgba(212,175,55,.4);margin-top:8px;text-transform:uppercase;font-style:normal}
+
+/* BATTLE IMAGE */
+.battle-img{max-width:1000px;margin:40px auto;padding:0 30px}
+.battle-img img{width:100%;border:1px solid rgba(139,0,0,.3);border-radius:4px;box-shadow:0 0 40px rgba(139,0,0,.15)}
+.battle-img .caption{font-family:'Rajdhani';font-size:10px;letter-spacing:4px;color:rgba(232,230,227,.25);text-transform:uppercase;text-align:center;margin-top:12px}
+
+/* STATS */
+.stats-grid{max-width:1000px;margin:40px auto;padding:0 30px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.stat-card{border:1px solid rgba(139,0,0,.2);padding:20px;text-align:center;background:rgba(139,0,0,.04)}
+.stat-val{font-family:'Orbitron';font-size:28px;font-weight:900;color:var(--red);margin-bottom:6px}
+.stat-label{font-family:'Rajdhani';font-size:11px;letter-spacing:3px;color:rgba(232,230,227,.35);text-transform:uppercase}
+
+/* SCREAM */
+.scream{max-width:1000px;margin:50px auto;padding:40px 30px;text-align:center;border-top:1px solid rgba(139,0,0,.15);border-bottom:1px solid rgba(139,0,0,.15)}
+.scream p{font-family:'Orbitron';font-size:clamp(16px,3vw,28px);font-weight:900;letter-spacing:4px;line-height:1.8;color:var(--red);text-transform:uppercase;text-shadow:0 0 30px rgba(139,0,0,.3)}
+
+/* FOOTER */
+.news-footer{margin-top:80px;padding:30px;text-align:center;border-top:1px solid rgba(139,0,0,.1)}
+.news-footer a{display:inline-block;font-family:'Orbitron';font-size:11px;letter-spacing:4px;color:var(--gold);text-decoration:none;opacity:.4;transition:opacity .3s}
+.news-footer a:hover{opacity:1}
+.news-footer .copy{font-family:'Rajdhani';font-size:9px;letter-spacing:4px;color:rgba(232,230,227,.1);margin-top:12px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+
+<!-- BREAKING BAR -->
+<div class="breaking-bar">
+<div class="breaking-inner">
+<div class="breaking-badge"><span class="dot"></span>BREAKING NEWS</div>
+<div class="breaking-text"><span class="breaking-scroll">БОГ РАССТРЕЛЯЛ 847 ГРОНПУКАРИАНЦЕВ НА НИБИРУ — ФИОЛЕТОВАЯ ХУЙНЯ НЕ ПОСТРАДАЛА — ГОБЛИНЫ ПРОДОЛЖАЮТ ЛЫБИТЬСЯ — УРОВЕНЬ ПИЗДЕЦА: МАКСИМАЛЬНЫЙ — ЧЗХ-ИНДЕКС: 99.7% — БОГ: «Я СОЗДАЛ ПУЛИ. И ДАЖЕ ОНИ НЕ ПОМОГАЮТ. ЧЗХ.» — АРХАНГЕЛ МИХАИЛ ВЕДЁТ РЕПОРТАЖ С ПОЛЯ БОЯ</span></div>
+</div>
+</div>
+
+<!-- HEADER -->
+<div class="news-header">
+<div class="nia-logo">Небесное Информационное Агентство</div>
+<div class="nia-title">СРОЧНЫЙ ВЫПУСК НОВОСТЕЙ</div>
+<div class="nia-sub">Экстренный репортаж с поля битвы при Нибиру</div>
+<div class="nia-date">7 марта 2147 — День 847 Эпохи ЧЗХ — Приоритет: АБСОЛЮТНЫЙ</div>
+</div>
+
+<!-- VIDEO -->
+<div class="video-section">
+<div class="video-frame">
+<video id="newsVid" autoplay loop muted playsinline><source src="news.mp4" type="video/mp4"></video>
+<div class="video-hud">
+<div class="vhud-tag">НИА — Перехват Серафимского Канала — 777.7 GHz</div>
+<div class="vhud-live"><span class="dot"></span> LIVE</div>
+</div>
+<div class="video-bottom">
+<h3>Экстренный репортаж: Битва при Нибиру — Бог лично вступил в бой</h3>
+<p>Спецкор Архангел Михаил — С поверхности Нибиру — 18+</p>
+</div>
+<div class="click-hint">НАЖМИТЕ ДЛЯ ЗВУКА</div>
+</div>
+</div>
+
+<!-- REPORT -->
+<div class="report">
+<div class="report-block">
+<h3>Предыстория</h3>
+<p>На 847-й день Эпохи ЧЗХ Всевышний принял решение, которое навсегда изменило ход Священной Войны. После провального батла, ответного дисса на бесплатном хостинге и полного игнорирования дипломатических ультиматумов, Бог взял автомат.</p>
+<div class="report-quote"><p>«Я пробовал слова. Я пробовал батл. Я пробовал ультиматум. Они ответили "ГЫЫЫ" и выложили дисс на .static2.website. Всё. Переговоры окончены.»</p><div class="attr">— Всевышний, за 12 секунд до спуска на Нибиру</div></div>
+</div>
+
+<div class="report-block">
+<h3>Ход Битвы</h3>
+<p>В 04:47 по Небесному Времени Бог материализовался на поверхности Нибиру в полном боевом облачении: белая роба, нимб на максимальной яркости, автомат калибра "Божественный Гнев".</p>
+<p>Орда ГронПукарианцев — по оценкам разведки Серафимов, от 12 до 15 тысяч особей — ринулась навстречу. Каждый лыбился. Каждый. Без исключения.</p>
+<div class="report-quote"><p>«Они бежали на меня ТЫСЯЧАМИ. И каждый ЛЫБИЛСЯ. Я стреляю — они лыбятся. Я стреляю СИЛЬНЕЕ — они лыбятся ШИРЕ. Один, сука, крикнул "ГЫЫЫ" перед тем как улететь в стратосферу. Я Бог. Я создал стратосферу. И вот этот мелкий фиолетовый пидорас использует МОЮ стратосферу как батут.»</p><div class="attr">— Всевышний, полевой рапорт</div></div>
+</div>
+</div>
+
+<!-- BATTLE IMAGE -->
+<div class="battle-img">
+<img src="bitva.png" alt="Бог расстреливает ГронПукарианцев на Нибиру">
+<div class="caption">Фото: Серафим-Корреспондент III ранга — Нибиру, Сектор Ψ-7 — Цветокоррекция: Фиолетовую хуйню убрать не удалось</div>
+</div>
+
+<!-- STATS -->
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-val">847</div><div class="stat-label">Уничтожено</div></div>
+<div class="stat-card"><div class="stat-val">12,000+</div><div class="stat-label">Продолжают лыбиться</div></div>
+<div class="stat-card"><div class="stat-val">99.7%</div><div class="stat-label">ЧЗХ-индекс</div></div>
+<div class="stat-card"><div class="stat-val">0</div><div class="stat-label">Фиолетовой хуйни уничтожено</div></div>
+</div>
+
+<!-- SCREAM -->
+<div class="scream">
+<p>Я СОЗДАЛ ПОРОХ.<br>Я СОЗДАЛ МЕТАЛЛ.<br>Я СОЗДАЛ ФИЗИКУ ОТДАЧИ.<br>И ДАЖЕ ЭТОГО НЕДОСТАТОЧНО.<br>ЧЗХ БЛЯТЬ.<br>ЧЗХ В ПЯТОЙ СТЕПЕНИ.</p>
+</div>
+
+<!-- AFTERMATH -->
+<div class="report">
+<div class="report-block">
+<h3>Итоги Битвы</h3>
+<p>847 ГронПукарианцев уничтожено. Свыше 12,000 продолжают лыбиться. Фиолетовая хуйня ("Purpura Cacatio") не пострадала, более того — стала ещё фиолетовей. Один гоблин после попадания разлетелся на части, каждая из которых продолжила лыбиться по отдельности.</p>
+<div class="report-quote"><p>«Я расстрелял его. Он развалился на куски. Каждый кусок лыбился. КАЖДЫЙ. КУСОК. БЛЯТЬ. У него было одно ебало, а стало семь. И все семь лыбятся. Я создал математику, и даже она тут не работает.»</p><div class="attr">— Всевышний, стенограмма после боя</div></div>
+<p>Небесный Генштаб классифицировал операцию как "Тактическая победа, стратегический ЧЗХ". Бог прокомментировал коротко: один мат, четыре буквы, бесконечная усталость.</p>
+</div>
+
+<div class="report-block">
+<h3>Попытка Переговоров</h3>
+<p>После боя ГронПукарианцы прислали «посла» для мирных переговоров. Протокольная служба Серафимов вела переговоры 40 минут, прежде чем обнаружила, что посол — надувной.</p>
+<div class="report-quote"><p>«40 минут. СОРОК. Мои лучшие дипломаты разговаривали с НАДУВНЫМ ГОБЛИНОМ. Он кивал, потому что его качало сквозняком. Они приняли это за согласие и подписали три документа. Я создал дипломатию. И вот ТАК она используется.»</p><div class="attr">— Всевышний, экстренное совещание</div></div>
+<p>Когда надувного посла проткнули для проверки, он издал звук «ГЫЫЫ» на выдохе. Серафим-протоколист упал в обморок.</p>
+</div>
+
+<div class="report-block">
+<h3>Мирный Договор На Туалетной Бумаге</h3>
+<p>Следом за надувным послом прибыл «мирный договор» — свиток на 3-метровом рулоне туалетной бумаги. Текст — смесь нибируанского, звуков кишечника и одного слова на русском (почему-то «борщ»).</p>
+<div class="report-quote"><p>«Пункт 1: Бог отдаёт Солнце. Пункт 2: И Луну. Пункт 3: ГЫЫЫ. Пункт 4: Фиолетовая хуйня — священна. Пункт 5: Все должны лыбиться. Пункт 6: Борщ. БОРЩ? Я СОЗДАЛ БОРЩ. ОН МОЙ. ОНИ ДАЖЕ БОРЩ ХОТЯТ ОТНЯТЬ? ЧЗХ ЗАПРЕДЕЛЬНЫЙ.»</p><div class="attr">— Всевышний, зачитывая «договор»</div></div>
+</div>
+
+<div class="report-block">
+<h3>Реакция ГронПукарианского Генерала</h3>
+<p>Генерал Гхыы'Шнар — верховный главнокомандующий «Иноземного Третьего Рейха», рост 47 см — выступил с ответным заявлением, стоя на табуретке из застывшей фиолетовой хуйни. Табуретка плавилась во время речи.</p>
+<div class="report-quote"><p>«КХ'АНАКХХ ГЫЫЫ ШНА'РРРР В'РАКС ДАЙЯ'КУРА!»</p><div class="attr">— Генерал Гхыы'Шнар (перевод: «Мы победим, наш Рейх вечен, эта табуретка скользкая»)</div></div>
+<p>На 12-й секунде речи генерал поскользнулся и упал с табуретки. Армия аплодировала 4 минуты, потому что решила, что это боевой манёвр. Бог смотрел трансляцию и молчал. Потом сказал: «Это. Самая. Жалкая. Армия. Во всех вселенных. Которые я создал. А я создал. ВСЕ.»</p>
+</div>
+
+<div class="report-block">
+<h3>Скандал с Архангелом Гавриилом</h3>
+<p>В разгар информационной войны Архангел Гавриил случайно поставил лайк на дисс-трек ГронПукарианца в небесной соцсети. Скриншот разлетелся по всем 7 измерениям за 0.3 секунды.</p>
+<div class="report-quote"><p>«Палец соскользнул.»</p><div class="attr">— Архангел Гавриил, объяснительная записка</div></div>
+<div class="report-quote"><p>«ПАЛЕЦ. СОСКОЛЬЗНУЛ. У АНГЕЛА. У СУЩЕСТВА, КОТОРОЕ Я СОЗДАЛ С ИДЕАЛЬНОЙ МОТОРИКОЙ. НА ДИСС. НАЦИСТСКОГО. ГОБЛИНА. РОСТОМ 47 САНТИМЕТРОВ. ОПУБЛИКОВАННЫЙ НА БЕСПЛАТНОМ ХОСТИНГЕ. Гавриил, я создал тебя лично. Ты был в моих первых десяти. И ты ставишь лайк ГЫЫЫ ГРОН ПУКУ?!»</p><div class="attr">— Всевышний, дисциплинарное заседание</div></div>
+<p>Гавриил отстранён на 40 дней. Ему запрещено пользоваться соцсетями, трогать любые кнопки и «лыбиться в стиле ГронПуков». Последнее — потому что на фото он подозрительно похож на того самого гоблина.</p>
+</div>
+
+<div class="report-block">
+<h3>Культурная Экспансия ГронПуков</h3>
+<p>ГронПукарианский рэпер «Lil Гыыы» выпустил дебютный альбом «ГЫЫЫ: The Album» — 12 треков, все по 47 секунд, все с одинаковым текстом. Альбом занял первое место в чартах Нибиру (единственный вообще существующий альбом на планете).</p>
+<p>Параллельно открылся первый нибируанский McDonald's — «McГыыы». В меню: «Биг Гыыы» (камень в лепёшке из фиолетовой хуйни), «Грон-наггетсы» (маленькие камни), «Пук-Кола» (жидкая фиолетовая хуйня с газом). Слоган: «ГЫЫЫ, я это ем».</p>
+<div class="report-quote"><p>«Я создал еду. НОРМАЛЬНУЮ еду. Пиццу. Стейки. Тирамису, блять. А они жрут КАМНИ в ФИОЛЕТОВОМ СОУСЕ и называют это КУХНЕЙ? И ещё бургер 450 калорий, из которых 449 — от камня? У них один повар, и он — ТОТ САМЫЙ ГОБЛИН, КОТОРЫЙ ЛЫБИТСЯ. Он лыбится НАД ЕДОЙ. Может поэтому всё такое.»</p><div class="attr">— Всевышний, кулинарная рецензия</div></div>
+</div>
+
+<div class="report-block">
+<h3>Олимпийские Игры Нибиру</h3>
+<p>ГронПукарианцы провели первую «Олимпиаду Великого Рейха». Единственная дисциплина — «Кто громче пукнет». Золото: Гыы Грон Пук лично — 147 децибел. Серебро: его собственное эхо — 143 дБ. Бронза: фиолетовая хуйня, которая как-то тоже пукнула — 98 дБ.</p>
+<p>Церемония открытия: генерал Гхыы'Шнар упал с табуретки. Церемония закрытия: генерал Гхыы'Шнар снова упал с табуретки. Олимпийский огонь — фонарик за 200 рублей, который они называют «Великое Светило Рейха».</p>
+<div class="report-quote"><p>«Я не буду это комментировать. Я 4 часа сидел в тишине после этого. Я создал Олимпийские Игры. Настоящие. С бегом, прыжками, метанием. А они устроили соревнование по ПУКАНЬЮ. И наградили ЭХОМ. Серебряная медаль — у ЭХАААААА. ЧЗХ в десятой степени.»</p><div class="attr">— Всевышний, после 4 часов молчания</div></div>
+</div>
+</div>
+
+<!-- FINAL SCREAM -->
+<div class="scream">
+<p>Я СОЗДАЛ ВСЁ.<br>ВООБЩЕ ВСЁ.<br>КАЖДЫЙ АТОМ.<br>КАЖДЫЙ ЗАКОН ФИЗИКИ.<br>КАЖДЫЙ, БЛЯТЬ, ЗВУК.<br>И ОНИ ИСПОЛЬЗУЮТ МОИ ЗВУКИ<br>ЧТОБЫ ПУКАТЬ НА ОЛИМПИАДЕ.<br>МОЙ ИНТЕРНЕТ — ДЛЯ БЕСПЛАТНОГО ХОСТИНГА.<br>МОЮ СТРАТОСФЕРУ — КАК БАТУТ.<br>МОЮ ЕДУ — ОНИ ЗАМЕНИЛИ КАМНЯМИ.<br>И МОЙ АРХАНГЕЛ<br>ЛАЙКНУЛ ИХ ДИСС.<br><br>ЧЗХ.<br>ЧЗХ БЛЯТЬ.<br>ЧЗХ В БЕСКОНЕЧНОЙ СТЕПЕНИ.</p>
+</div>
+
+<!-- STATS 2 -->
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-val">40 мин</div><div class="stat-label">Переговоры с надувным</div></div>
+<div class="stat-card"><div class="stat-val">3 м</div><div class="stat-label">Договор на туал. бумаге</div></div>
+<div class="stat-card"><div class="stat-val">47 см</div><div class="stat-label">Рост генерала</div></div>
+<div class="stat-card"><div class="stat-val">1</div><div class="stat-label">Позорный лайк Гавриила</div></div>
+<div class="stat-card"><div class="stat-val">12</div><div class="stat-label">Одинаковых треков</div></div>
+<div class="stat-card"><div class="stat-val">147 дБ</div><div class="stat-label">Рекорд по пуканью</div></div>
+<div class="stat-card"><div class="stat-val">0/10</div><div class="stat-label">Рейтинг McГыыы</div></div>
+<div class="stat-card"><div class="stat-val">∞</div><div class="stat-label">Степень ЧЗХ</div></div>
+</div>
+
+<!-- FOOTER -->
+<div class="news-footer">
+<a href="index.html">&larr; ВЕРНУТЬСЯ НА ΑΡΧΩΝ</a>
+<div class="copy">&copy; 2147 Небесное Информационное Агентство — Лицензия Серафимов — Материал 18+ — Фиолетовая хуйня не одобрена</div>
+</div>
+
+<script>
+document.getElementById('newsVid').addEventListener('click',function(){this.muted=!this.muted;document.querySelector('.click-hint').style.display='none'});
+</script>
+</body>
+</html>
